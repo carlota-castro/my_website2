@@ -1,5 +1,5 @@
 # Site settings
-baseURL = "https://example.org/"
+baseURL = "http://example.org/"
 languageCode = "en-us"
 title = "Portfolio website for Carlota Castro"
 theme = "forty"
@@ -82,7 +82,7 @@ disqusShortname = ""
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
     title = "Hi, my name is Carlota"
-    subtitle = "A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP\nAND RELEASED UNDER THE CREATIVE COMMONS."
+    #subtitle = "A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP\nAND RELEASED UNDER THE CREATIVE COMMONS."
     buttonText = "Get Started"
 
 
@@ -94,7 +94,7 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "NYT Masks"
       subtitle = "How does mask use acceptance vary in the us?"
-      image = "pic01.jpg"
+      image = "pic07.jpg"
       url = "blogs/blog5"
 
     [[params.tiles.showcase]]
@@ -106,7 +106,7 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Magna"
       subtitle = "Lorem Etiam Nullam"
-      image = "pic03.jpg"
+      image = "pic11.jpg"
       url = "blogs/magna"
 
     [[params.tiles.showcase]]
