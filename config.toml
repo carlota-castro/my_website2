@@ -1,5 +1,5 @@
 # Site settings
-baseURL = "https://carlota-portfolio2.netlify.app"
+baseURL = "https://carlota-portfolio2.netlify.app/"
 languageCode = "en-us"
 title = "Portfolio website for Carlota Castro"
 theme = "forty"
@@ -83,7 +83,7 @@ disqusShortname = ""
     # the 'static/img' folder.
     title = "Hi, my name is Carlota"
     #subtitle = "A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP\nAND RELEASED UNDER THE CREATIVE COMMONS."
-    buttonText = "Get Started"
+    buttonText = "Let's start!"
 
 
   # Tiles Section
@@ -207,7 +207,7 @@ disqusShortname = ""
     
     [[params.footer.social]]
       icon = "fa-github"
-      url= "https://github.com/carlota-castro/my_website1"
+      url= "https://github.com/carlota-castro/my_website2"
       label = "GitHub"
 
     [[params.footer.social]]
