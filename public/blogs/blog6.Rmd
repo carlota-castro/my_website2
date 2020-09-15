@@ -45,7 +45,7 @@ library(openintro)
 ```
 
 
-# Omega Group plc- Pay Discrimination
+# Omega Group plc- Pay Discrimination ??
 
 At the last board meeting of Omega Group Plc., the headquarters of a large multinational company, the issue was raised that women were being discriminated in the company, in the sense that the salaries were not the same for male and female executives. A quick analysis of a sample of 50 employees (of which 24 men and 26 women) revealed that the average salary for men was about 8,700 higher than for women. This seemed like a considerable difference, so it was decided that a further analysis of the company salaries should be conducted. 
 
@@ -117,7 +117,7 @@ salaries_null_world<-omega%>%
 salaries_null_world %>% visualize() +
   shade_p_value(obs_stat = init_sal_null, direction = "two-sided")+
   #Customize the plot
-  labs(x="Difference between mean salary of women and men",y="Count",title="Is there a significant difference between men and women's salaries?",subtitle="Null hypothesis distribution and p-value")+
+  labs(x="Difference between mean salary of women and men",y="Count",title="Is there a significant difference between \n men and women's salaries?",subtitle="Null hypothesis distribution and p-value")+
   theme_clean()
 #Get the numerical value for p
 salaries_null_world %>% get_p_value(obs_stat = init_sal_null, direction = "two-sided")
@@ -165,7 +165,7 @@ experience_null_world <- omega %>%
 experience_null_world %>% visualize() +
   shade_p_value(obs_stat = init_exp_null, direction = "two-sided")+
   #Customize the plot
-  labs(x="Difference between mean experience of women and men",y="Count",title="Is there a significant difference between men and women's experience?",subtitle="Null hypothesis distribution and p-value")+theme_clean()
+  labs(x="Difference between mean experience of women and men",y="Count",title="Is there a significant difference between \n men and women's experience?",subtitle="Null hypothesis distribution and p-value")+theme_clean()
 #Get the numerical p value
 experience_null_world %>% get_p_value(obs_stat = init_exp_null, direction = "two_sided")
 ```

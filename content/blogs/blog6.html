@@ -14,7 +14,7 @@ title: Salaries
 
 
 <div id="omega-group-plc--pay-discrimination" class="section level1">
-<h1>Omega Group plc- Pay Discrimination</h1>
+<h1>Omega Group plc- Pay Discrimination ??</h1>
 <p>At the last board meeting of Omega Group Plc., the headquarters of a large multinational company, the issue was raised that women were being discriminated in the company, in the sense that the salaries were not the same for male and female executives. A quick analysis of a sample of 50 employees (of which 24 men and 26 women) revealed that the average salary for men was about 8,700 higher than for women. This seemed like a considerable difference, so it was decided that a further analysis of the company salaries should be conducted.</p>
 <p>Our team carried out the analysis to find out whether there is indeed a significant difference between the salaries of men and women, and whether the difference is due to discrimination or whether it is based on another, possibly valid, determining factor.</p>
 <div id="loading-the-data" class="section level2">
@@ -94,7 +94,7 @@ salaries_null_world&lt;-omega%&gt;%
 salaries_null_world %&gt;% visualize() +
   shade_p_value(obs_stat = init_sal_null, direction = &quot;two-sided&quot;)+
   #Customize the plot
-  labs(x=&quot;Difference between mean salary of women and men&quot;,y=&quot;Count&quot;,title=&quot;Is there a significant difference between men and women&#39;s salaries?&quot;,subtitle=&quot;Null hypothesis distribution and p-value&quot;)+
+  labs(x=&quot;Difference between mean salary of women and men&quot;,y=&quot;Count&quot;,title=&quot;Is there a significant difference between \n men and women&#39;s salaries?&quot;,subtitle=&quot;Null hypothesis distribution and p-value&quot;)+
   theme_clean()</code></pre>
 <p><img src="/blogs/blog6_files/figure-html/hypothesis_testing_salary_gender-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>#Get the numerical value for p
@@ -158,7 +158,7 @@ experience_null_world &lt;- omega %&gt;%
 experience_null_world %&gt;% visualize() +
   shade_p_value(obs_stat = init_exp_null, direction = &quot;two-sided&quot;)+
   #Customize the plot
-  labs(x=&quot;Difference between mean experience of women and men&quot;,y=&quot;Count&quot;,title=&quot;Is there a significant difference between men and women&#39;s experience?&quot;,subtitle=&quot;Null hypothesis distribution and p-value&quot;)+theme_clean()</code></pre>
+  labs(x=&quot;Difference between mean experience of women and men&quot;,y=&quot;Count&quot;,title=&quot;Is there a significant difference between \n men and women&#39;s experience?&quot;,subtitle=&quot;Null hypothesis distribution and p-value&quot;)+theme_clean()</code></pre>
 <p><img src="/blogs/blog6_files/figure-html/hypothesis_testing_experience-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>#Get the numerical p value
 experience_null_world %&gt;% get_p_value(obs_stat = init_exp_null, direction = &quot;two_sided&quot;)</code></pre>
