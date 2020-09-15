@@ -107,7 +107,7 @@ disqusShortname = ""
       title = "Trump's popularity"
       subtitle = "How has the approval rate varied throughout his time in office?"
       image = "Trump.jpg"
-      url = "blogs/magna"
+      url = "blogs/blog7"
 
     [[params.tiles.showcase]]
       title = "Ipsum"

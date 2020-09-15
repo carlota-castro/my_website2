@@ -1,0 +1,106 @@
+---
+categories:
+- ""
+- ""
+date: "2020-09-15"
+description: How has Trump approval rate varied throughout his time in office?
+draft: false
+image: pic07.jpg
+keywords: ""
+slug: blog7
+title: Trump approval
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, include=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(here)
+library(skimr)
+library(janitor)
+library(httr)
+library(readxl)
+library(vroom)
+```
+
+# Trump's Approval Margins
+
+For our analysis of president Trump's approval, firstly we need to load the data! 
+
+```{r, cache=TRUE}
+
+# Import approval polls data
+approval_polllist <- vroom::vroom(file = 'data/approval_polllist.csv')
+#Take a look at the data
+glimpse(approval_polllist)
+#Use lubridate to fix the dates as they are given as characters
+approval_polllist$modeldate<-mdy(approval_polllist$modeldate)
+approval_polllist$startdate<-mdy(approval_polllist$startdate)
+approval_polllist$enddate<-mdy(approval_polllist$enddate)
+approval_polllist$createddate<-mdy(approval_polllist$createddate)
+```
+## Create a plot
+
+We will calculate the average net approval rate (approve-disapprove) for each week since Trump got into office, and plot the net approval along with the 95% confidence intervals.
+
+```{R Trump,fig.height=5,fig.width=10}
+Trump_approval<-approval_polllist%>%
+  #Filter to select the voters only from the subgroup list
+filter(subgroup=="Voters")%>%
+  #Create the relevant variables: get the week and year from the enddate, and create plotting variable "net approval"
+  mutate(date=enddate,week=week(date),year=year(date),net_approval=approve-disapprove)%>%
+  group_by(week,year)%>%
+  #Calculate the relevant statistics: mean, count, standard dev, standard error, t critical, and CI boundaries
+  summarise(mean=mean(net_approval),stdev=sd(net_approval),count=n(),se=stdev/sqrt(count),t_critical=qt(0.975,count-1),lower_bound=mean-t_critical,upper_bound=mean+t_critical)
+#Remove outlier
+Trump_approval<- Trump_approval[-189,]
+
+#Plot the relevant variables
+ggplot(Trump_approval,aes(x=week,fill=as.factor(year)))+scale_fill_manual(values = c("red","green","#66FFFF","#E5CCFF"))+
+  geom_line(aes(y=lower_bound))+geom_line(aes(y=mean))+ 
+  geom_line(aes(y=upper_bound))+geom_point(aes(y=mean))+
+  #Shade the confidence interval
+  geom_ribbon(aes(ymin=lower_bound,ymax=upper_bound),alpha=0.3)+facet_wrap(~year)+
+  #Create a horizontal line at y=0
+  geom_hline(yintercept=0, size=1.5, color="orange")+
+  labs(title="Estimating Net Approval (approve-disapprove) for Donald Trump
+",subtitle="Weekly average of all polls",x="Week of the year",y="Average Net Approval (%)")+
+  
+  #Customize the size of the font, scales and background, and gridline colours
+  theme(text = element_text(size = 12),legend.position = "none", panel.background = element_rect(fill = "white",
+                                colour = "white",
+                                size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                colour = "grey"), 
+  panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
+                                colour = "grey")) + 
+  scale_y_continuous(breaks=c(-20,-17.5,-15,-12.5,-10,-7.5,-5,-2.5,0,2.5,5.0,7.5))+
+  scale_x_continuous(breaks=c(0, 13,26,39,52))
+
+```
+For the sake of reference, we can compare our plots to the ones below and observe that the values and trends match.
+
+```{r trump_margins, echo=FALSE, out.width="100%"}
+knitr::include_graphics(here::here("images", "trump_approval_margin.png"), error = FALSE)
+```
+## Compare Confidence Intervals
+
+If we compare the confidence intervals for `week 15` (6-12 April 2020) and `week 34` (17-23 August 2020), we can observe that the confidence interval for the second week is wider. The confidence interval is a function of the level of confidence, the standard deviation/variability and the sample size. Since the level of confidence is kept constant at 95%, we can collude that either the variability has increased and/or the sample size has diminished (i.e. less polls were conducted). By analyzing the numerical data, we can confirm that in week 34 the standard deviation increased by 64.7% and the sample size decreased by 11%.
