@@ -1,0 +1,177 @@
+---
+title: "Session 6: Homework 3"
+author: "Carlota_homework3"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: flatly
+    highlight: zenburn
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    code_folding: show
+---
+
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(GGally)
+library(readxl)
+library(here)
+library(skimr)
+library(janitor)
+library(broom)
+library(tidyquant)
+library(infer)
+library(openintro)
+```
+
+
+# Omega Group plc- Pay Discrimination
+
+At the last board meeting of Omega Group Plc., the headquarters of a large multinational company, the issue was raised that women were being discriminated in the company, in the sense that the salaries were not the same for male and female executives. A quick analysis of a sample of 50 employees (of which 24 men and 26 women) revealed that the average salary for men was about 8,700 higher than for women. This seemed like a considerable difference, so it was decided that a further analysis of the company salaries should be conducted. 
+
+Our team carried out the analysis to find out whether there is indeed a significant difference between the salaries of men and women, and whether the difference is due to discrimination or whether it is based on another, possibly valid, determining factor. 
+
+## Loading the data
+
+```{r load_omega_data}
+#omega <- read_csv(here::here("data", "omega.csv"))
+#Indicate the specific file path inside read_csv
+omega <- read_csv(file = 'data/omega.csv')
+glimpse(omega) # examine the data frame
+```
+
+## Relationship Salary - Gender ?
+
+The data frame `omega` contains the salaries for the sample of 50 executives in the company. Is it possible to conclude that  there is a significant difference between the salaries of the male and female executives?
+
+To answer the question, we will start by analysing the key statistical parameters: mean, SD, sample size, confidence interval... 
+
+```{r, confint_single_valiables}
+# Summary Statistics of salary by gender
+mosaic::favstats (salary ~ gender, data=omega)
+
+# Dataframe with two rows (male-female) and having as columns gender, mean, SD, sample size, 
+# the t-critical value, the standard error, the margin of error, 
+# and the low/high endpoints of a 95% confidence interval
+statistics<-omega%>%
+  #Select the relevant variables' data from the dataframe
+select(salary,gender)%>%
+  #Group by gender (male, female)
+  group_by(gender)%>%
+  #Calculate the relevant statistics to be able to compare them
+  summarise(mean=mean(salary),SD=sd(salary),SampleSize=n(),t_crit=qt(0.975,SampleSize-1),SE=SD/sqrt(SampleSize),
+            MarginError=t_crit*SE,LowBound=mean-MarginError,HighBound=mean+MarginError)
+#Display the statistics
+statistics
+
+```
+
+From the data obtained, we can observe that the confidence intervals do not overlap. Hence, we can conclude that there is a significant difference between the salaries of male and female executives. 
+
+Additionally, we will run further tests to verify our conclusion: a hypothesis testing, assuming a null hypothesis that the mean difference in salaries for mean and women is zero. 
+
+```{r, hypothesis_testing_salary_gender}
+# Hypothesis testing using t.test() 
+t.test(salary ~ gender, data = omega)
+
+# Hypothesis testing using infer package
+
+#Initialize the test
+init_sal_null<-omega%>%
+  #Specify the relevant variables: salary acts as y variable, gender as x variable
+specify(salary ~ gender)%>%
+  #Find the mean difference
+calculate(stat="diff in means",order=c("female","male")) 
+
+#Simulate the test on the null distribution, which we will save as null
+salaries_null_world<-omega%>%
+  #Specify the variables of interest
+  specify(salary ~ gender)%>%
+  #Hypothesize a null or no zero difference between the salaries of men and women
+  hypothesize(null="independence")%>%
+  #Generate a bunch of simulated samples
+  generate(reps=1000,type="permute")%>%
+  #Find the mean differences of each sample
+  calculate(stat="diff in means",order=c("female","male"))
+#Visualize the null distribution with the p value represented as a red line
+salaries_null_world %>% visualize() +
+  shade_p_value(obs_stat = init_sal_null, direction = "two-sided")+
+  #Customize the plot
+  labs(x="Difference between mean salary of women and men",y="Count",title="Is there a significant difference between men and women's salaries?",subtitle="Null hypothesis distribution and p-value")+
+  theme_clean()
+#Get the numerical value for p
+salaries_null_world %>% get_p_value(obs_stat = init_sal_null, direction = "two-sided")
+```
+From the hypothesis testing, we are more than 95% confident that the null hypothesis is untrue. A significant difference between the male and female executive salaries has been confirmed in 3 different ways: the hypothesis testing using t.test(), the plot of the null hypothesis distribution with a red line corresponding to the p-threshold (as we can visually observe the line is very far away from 0), and a p<0.05. However, we cannot affirm that this significant difference is due to discrimination as there may be some other factors involved. Finding out the true causes of the salary gap requires further analyses.
+
+## Relationship Experience - Gender?
+
+At the board meeting, someone raised the issue that there was indeed a substantial difference between male and female salaries, but that this was attributable to other reasons such as differences in experience. A questionnaire send out to the 50 executives in the sample reveals that the average experience of the men is approximately 21 years, whereas the women only have about 7 years experience on average. 
+The relevant statistical information is shown in the tables below.
+
+```{r, experience_stats}
+# Summary Statistics of experience by gender
+favstats (experience ~ gender, data=omega)
+#Calculate additional key statistics and confidence intervals
+statistics<-omega%>%
+select(experience,gender)%>%
+  group_by(gender)%>%
+  summarise(mean=mean(experience),SD=sd(experience),SampleSize=n(),t_crit=qt(0.975,SampleSize-1),SE=SD/sqrt(SampleSize),
+  MarginError=t_crit*SE,LowBound=mean-MarginError,HighBound=mean+MarginError)
+statistics
+```
+
+The 95% confidence intervals do not overlap. Hence, we can conclude that there is a significant difference in the experience of female and male executives.
+Further tests based on null hypothesis are conducted below.  
+
+```{r, hypothesis_testing_experience}
+# Hypothesis testing using t.test() 
+t.test(experience ~ gender, data = omega)
+
+# Hypothesis testing using infer package
+#Initialize the test
+init_exp_null <- omega %>%
+specify(experience ~ gender)%>%
+calculate(stat="diff in means",order=c("female","male")) 
+
+#Simulate the test on the null distribution, which we will save as experience_null_world
+experience_null_world <- omega %>%
+  specify(experience ~ gender) %>%
+  hypothesize(null="independence") %>%
+  generate(reps=1000,type="permute") %>%
+  calculate(stat="diff in means",order=c("male","female"))
+
+#Visualize the null distribution and get the p value
+experience_null_world %>% visualize() +
+  shade_p_value(obs_stat = init_exp_null, direction = "two-sided")+
+  #Customize the plot
+  labs(x="Difference between mean experience of women and men",y="Count",title="Is there a significant difference between men and women's experience?",subtitle="Null hypothesis distribution and p-value")+theme_clean()
+#Get the numerical p value
+experience_null_world %>% get_p_value(obs_stat = init_exp_null, direction = "two_sided")
+```
+From the data obtained using t.test(), the plot of the null distribution and the p value (which is less than 0.05), we can reject the null hypothesis. Hence, we can conclude that there is a significant difference between the experience of men and women. This conclusion doesn't endanger the previous one that indicated that salaries of men and women are significantly different. However, from the current analysis, we can say the salaries are not necessarily different due to factors such as gender discrimination, there can be other factors such as experience having an important effect on the salary gap. 
+
+
+
+

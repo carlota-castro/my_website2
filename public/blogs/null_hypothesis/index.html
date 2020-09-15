@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="MAM student LBS; Aerospace engineer">
+	<meta name="author" content="Carlota Castro">
+	<meta name="generator" content="Hugo 0.75.0" />
+	<title>Session 6: Homework 3 &middot; Portfolio website for Carlota Castro</title>
+	<!-- Stylesheets -->
+	
+	<link rel="stylesheet" href="/css/main.css"/>
+	
+	
+
+	
+
+	<!-- Custom Fonts -->
+	<link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/ie/html5shiv.js"></script>
+	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
+	<![endif]-->
+</head>
+
+    <body>
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+    <header id="header" class="alt">
+        <a href="/" class="logo"><strong>Carlota Castro</strong> <span></span></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+
+<!-- Menu -->
+    <nav id="menu">
+        <ul class="links">
+            
+                <li><a href="/">Home</a></li>
+            
+                <li><a href="/blogs">Blogs</a></li>
+            
+
+        </ul>
+        <ul class="actions vertical">
+            
+                <li><a href="/blogs" class="button special fit">My Projects</a></li>
+            
+            
+        </ul>
+    </nav>
+
+        <!-- Main -->
+            <div id="main" class="alt">
+
+                
+                    <section id="one">
+                        <div class="inner">
+                            <header class="major">
+                                <h1>Session 6: Homework 3</h1>
+                            </header>
+                            
+                            
+
+
+<div id="omega-group-plc--pay-discrimination" class="section level1">
+<h1>Omega Group plc- Pay Discrimination</h1>
+<p>At the last board meeting of Omega Group Plc., the headquarters of a large multinational company, the issue was raised that women were being discriminated in the company, in the sense that the salaries were not the same for male and female executives. A quick analysis of a sample of 50 employees (of which 24 men and 26 women) revealed that the average salary for men was about 8,700 higher than for women. This seemed like a considerable difference, so it was decided that a further analysis of the company salaries should be conducted.</p>
+<p>Our team carried out the analysis to find out whether there is indeed a significant difference between the salaries of men and women, and whether the difference is due to discrimination or whether it is based on another, possibly valid, determining factor.</p>
+<div id="loading-the-data" class="section level2">
+<h2>Loading the data</h2>
+<pre class="r"><code>#omega &lt;- read_csv(here::here(&quot;data&quot;, &quot;omega.csv&quot;))
+#Indicate the specific file path inside read_csv
+omega &lt;- read_csv(file = &#39;data/omega.csv&#39;)
+glimpse(omega) # examine the data frame</code></pre>
+<pre><code>## Rows: 50
+## Columns: 3
+## $ salary     &lt;dbl&gt; 81894, 69517, 68589, 74881, 65598, 76840, 78800, 70033, 63…
+## $ gender     &lt;chr&gt; &quot;male&quot;, &quot;male&quot;, &quot;male&quot;, &quot;male&quot;, &quot;male&quot;, &quot;male&quot;, &quot;male&quot;, &quot;m…
+## $ experience &lt;dbl&gt; 16, 25, 15, 33, 16, 19, 32, 34, 1, 44, 7, 14, 33, 19, 24, …</code></pre>
+</div>
+<div id="relationship-salary---gender" class="section level2">
+<h2>Relationship Salary - Gender ?</h2>
+<p>The data frame <code>omega</code> contains the salaries for the sample of 50 executives in the company. Is it possible to conclude that there is a significant difference between the salaries of the male and female executives?</p>
+<p>To answer the question, we will start by analysing the key statistical parameters: mean, SD, sample size, confidence interval…</p>
+<pre class="r"><code># Summary Statistics of salary by gender
+mosaic::favstats (salary ~ gender, data=omega)</code></pre>
+<pre><code>##   gender   min    Q1 median    Q3   max  mean   sd  n missing
+## 1 female 47033 60338  64618 70033 78800 64543 7567 26       0
+## 2   male 54768 68331  74675 78568 84576 73239 7463 24       0</code></pre>
+<pre class="r"><code># Dataframe with two rows (male-female) and having as columns gender, mean, SD, sample size, 
+# the t-critical value, the standard error, the margin of error, 
+# and the low/high endpoints of a 95% confidence interval
+statistics&lt;-omega%&gt;%
+  #Select the relevant variables&#39; data from the dataframe
+select(salary,gender)%&gt;%
+  #Group by gender (male, female)
+  group_by(gender)%&gt;%
+  #Calculate the relevant statistics to be able to compare them
+  summarise(mean=mean(salary),SD=sd(salary),SampleSize=n(),t_crit=qt(0.975,SampleSize-1),SE=SD/sqrt(SampleSize),
+            MarginError=t_crit*SE,LowBound=mean-MarginError,HighBound=mean+MarginError)
+#Display the statistics
+statistics</code></pre>
+<pre><code>## # A tibble: 2 x 9
+##   gender   mean    SD SampleSize t_crit    SE MarginError LowBound HighBound
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;      &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 female 64543. 7567.         26   2.06 1484.       3056.   61486.    67599.
+## 2 male   73239. 7463.         24   2.07 1523.       3151.   70088.    76390.</code></pre>
+<p>From the data obtained, we can observe that the confidence intervals do not overlap. Hence, we can conclude that there is a significant difference between the salaries of male and female executives.</p>
+<p>Additionally, we will run further tests to verify our conclusion: a hypothesis testing, assuming a null hypothesis that the mean difference in salaries for mean and women is zero.</p>
+<pre class="r"><code># Hypothesis testing using t.test() 
+t.test(salary ~ gender, data = omega)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  salary by gender
+## t = -4, df = 48, p-value = 2e-04
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -12973  -4420
+## sample estimates:
+## mean in group female   mean in group male 
+##                64543                73239</code></pre>
+<pre class="r"><code># Hypothesis testing using infer package
+
+#Initialize the test
+init_sal_null&lt;-omega%&gt;%
+  #Specify the relevant variables: salary acts as y variable, gender as x variable
+specify(salary ~ gender)%&gt;%
+  #Find the mean difference
+calculate(stat=&quot;diff in means&quot;,order=c(&quot;female&quot;,&quot;male&quot;)) 
+
+#Simulate the test on the null distribution, which we will save as null
+salaries_null_world&lt;-omega%&gt;%
+  #Specify the variables of interest
+  specify(salary ~ gender)%&gt;%
+  #Hypothesize a null or no zero difference between the salaries of men and women
+  hypothesize(null=&quot;independence&quot;)%&gt;%
+  #Generate a bunch of simulated samples
+  generate(reps=1000,type=&quot;permute&quot;)%&gt;%
+  #Find the mean differences of each sample
+  calculate(stat=&quot;diff in means&quot;,order=c(&quot;female&quot;,&quot;male&quot;))
+#Visualize the null distribution with the p value represented as a red line
+salaries_null_world %&gt;% visualize() +
+  shade_p_value(obs_stat = init_sal_null, direction = &quot;two-sided&quot;)+
+  #Customize the plot
+  labs(x=&quot;Difference between mean salary of women and men&quot;,y=&quot;Count&quot;,title=&quot;Is there a significant difference between men and women&#39;s salaries?&quot;,subtitle=&quot;Null hypothesis distribution and p-value&quot;)+
+  theme_clean()</code></pre>
+<p><img src="/blogs/Null_hypothesis_files/figure-html/hypothesis_testing_salary_gender-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Get the numerical value for p
+salaries_null_world %&gt;% get_p_value(obs_stat = init_sal_null, direction = &quot;two-sided&quot;)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   p_value
+##     &lt;dbl&gt;
+## 1       0</code></pre>
+<p>From the hypothesis testing, we are more than 95% confident that the null hypothesis is untrue. A significant difference between the male and female executive salaries has been confirmed in 3 different ways: the hypothesis testing using t.test(), the plot of the null hypothesis distribution with a red line corresponding to the p-threshold (as we can visually observe the line is very far away from 0), and a p&lt;0.05. However, we cannot affirm that this significant difference is due to discrimination as there may be some other factors involved. Finding out the true causes of the salary gap requires further analyses.</p>
+</div>
+<div id="relationship-experience---gender" class="section level2">
+<h2>Relationship Experience - Gender?</h2>
+<p>At the board meeting, someone raised the issue that there was indeed a substantial difference between male and female salaries, but that this was attributable to other reasons such as differences in experience. A questionnaire send out to the 50 executives in the sample reveals that the average experience of the men is approximately 21 years, whereas the women only have about 7 years experience on average.
+The relevant statistical information is shown in the tables below.</p>
+<pre class="r"><code># Summary Statistics of experience by gender
+favstats (experience ~ gender, data=omega)</code></pre>
+<pre><code>##   gender min    Q1 median   Q3 max  mean    sd  n missing
+## 1 female   0  0.25    3.0 14.0  29  7.38  8.51 26       0
+## 2   male   1 15.75   19.5 31.2  44 21.12 10.92 24       0</code></pre>
+<pre class="r"><code>#Calculate additional key statistics and confidence intervals
+statistics&lt;-omega%&gt;%
+select(experience,gender)%&gt;%
+  group_by(gender)%&gt;%
+  summarise(mean=mean(experience),SD=sd(experience),SampleSize=n(),t_crit=qt(0.975,SampleSize-1),SE=SD/sqrt(SampleSize),
+  MarginError=t_crit*SE,LowBound=mean-MarginError,HighBound=mean+MarginError)
+statistics</code></pre>
+<pre><code>## # A tibble: 2 x 9
+##   gender  mean    SD SampleSize t_crit    SE MarginError LowBound HighBound
+##   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;      &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 female  7.38  8.51         26   2.06  1.67        3.44     3.95      10.8
+## 2 male   21.1  10.9          24   2.07  2.23        4.61    16.5       25.7</code></pre>
+<p>The 95% confidence intervals do not overlap. Hence, we can conclude that there is a significant difference in the experience of female and male executives.
+Further tests based on null hypothesis are conducted below.</p>
+<pre class="r"><code># Hypothesis testing using t.test() 
+t.test(experience ~ gender, data = omega)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  experience by gender
+## t = -5, df = 43, p-value = 1e-05
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -19.35  -8.13
+## sample estimates:
+## mean in group female   mean in group male 
+##                 7.38                21.12</code></pre>
+<pre class="r"><code># Hypothesis testing using infer package
+#Initialize the test
+init_exp_null &lt;- omega %&gt;%
+specify(experience ~ gender)%&gt;%
+calculate(stat=&quot;diff in means&quot;,order=c(&quot;female&quot;,&quot;male&quot;)) 
+
+#Simulate the test on the null distribution, which we will save as experience_null_world
+experience_null_world &lt;- omega %&gt;%
+  specify(experience ~ gender) %&gt;%
+  hypothesize(null=&quot;independence&quot;) %&gt;%
+  generate(reps=1000,type=&quot;permute&quot;) %&gt;%
+  calculate(stat=&quot;diff in means&quot;,order=c(&quot;male&quot;,&quot;female&quot;))
+
+#Visualize the null distribution and get the p value
+experience_null_world %&gt;% visualize() +
+  shade_p_value(obs_stat = init_exp_null, direction = &quot;two-sided&quot;)+
+  #Customize the plot
+  labs(x=&quot;Difference between mean experience of women and men&quot;,y=&quot;Count&quot;,title=&quot;Is there a significant difference between men and women&#39;s experience?&quot;,subtitle=&quot;Null hypothesis distribution and p-value&quot;)+theme_clean()</code></pre>
+<p><img src="/blogs/Null_hypothesis_files/figure-html/hypothesis_testing_experience-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Get the numerical p value
+experience_null_world %&gt;% get_p_value(obs_stat = init_exp_null, direction = &quot;two_sided&quot;)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   p_value
+##     &lt;dbl&gt;
+## 1       0</code></pre>
+<p>From the data obtained using t.test(), the plot of the null distribution and the p value (which is less than 0.05), we can reject the null hypothesis. Hence, we can conclude that there is a significant difference between the experience of men and women. This conclusion doesn’t endanger the previous one that indicated that salaries of men and women are significantly different. However, from the current analysis, we can say the salaries are not necessarily different due to factors such as gender discrimination, there can be other factors such as experience having an important effect on the salary gap.</p>
+</div>
+</div>
+
+                        </div>
+                    </section>
+            <!-- Disqus Inject -->
+                
+            </div>
+            
+        <!-- Footer -->
+            
+                <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                
+                    <li><a href="https://www.facebook.com/CarlotaCastro97" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+                
+                    <li><a href="https://www.instagram.com/carlota_castro_p/" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+                
+                    <li><a href="https://github.com/carlota-castro/my_website2" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+                
+                    <li><a href="https://www.linkedin.com/in/carlota-castro-perez/" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+                
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Company Name</li>
+                
+                <li>Design:  <a href="https://www.html5up.net">HTML5 UP</a></li>
+                
+            </ul>
+        </div>
+    </footer>
+
+            
+        </div>
+
+    <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+
+    
+
+    <!-- Main JS -->
+    <script src="/js/main.js"></script>
+
+    
+
+    
+
+    </body>
+</html>
