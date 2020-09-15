@@ -1,0 +1,93 @@
+---
+categories:
+- ""
+- ""
+date: "2020-09-15"
+description: How has Trump approval rate varied throughout his time in office?
+draft: false
+image: pic07.jpg
+keywords: ""
+slug: blog7
+title: Trump approval
+---
+
+
+
+<div id="trumps-approval-margins" class="section level1">
+<h1>Trump’s Approval Margins</h1>
+<p>For our analysis of president Trump’s approval, firstly we need to load the data!</p>
+<pre class="r"><code># Import approval polls data
+approval_polllist &lt;- vroom::vroom(file = &#39;data/approval_polllist.csv&#39;)
+#Take a look at the data
+glimpse(approval_polllist)</code></pre>
+<pre><code>## Rows: 14,533
+## Columns: 22
+## $ president           &lt;chr&gt; &quot;Donald Trump&quot;, &quot;Donald Trump&quot;, &quot;Donald Trump&quot;, &quot;…
+## $ subgroup            &lt;chr&gt; &quot;All polls&quot;, &quot;All polls&quot;, &quot;All polls&quot;, &quot;All polls…
+## $ modeldate           &lt;chr&gt; &quot;8/29/2020&quot;, &quot;8/29/2020&quot;, &quot;8/29/2020&quot;, &quot;8/29/2020…
+## $ startdate           &lt;chr&gt; &quot;1/20/2017&quot;, &quot;1/20/2017&quot;, &quot;1/20/2017&quot;, &quot;1/21/2017…
+## $ enddate             &lt;chr&gt; &quot;1/22/2017&quot;, &quot;1/22/2017&quot;, &quot;1/24/2017&quot;, &quot;1/23/2017…
+## $ pollster            &lt;chr&gt; &quot;Gallup&quot;, &quot;Morning Consult&quot;, &quot;Ipsos&quot;, &quot;Gallup&quot;, &quot;…
+## $ grade               &lt;chr&gt; &quot;B&quot;, &quot;B/C&quot;, &quot;B-&quot;, &quot;B&quot;, &quot;B&quot;, &quot;C+&quot;, &quot;B-&quot;, &quot;B+&quot;, &quot;B&quot;…
+## $ samplesize          &lt;dbl&gt; 1500, 1992, 1632, 1500, 1500, 1500, 1651, 1190, 2…
+## $ population          &lt;chr&gt; &quot;a&quot;, &quot;rv&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;lv&quot;, &quot;a&quot;, &quot;rv&quot;, &quot;a&quot;, &quot;…
+## $ weight              &lt;dbl&gt; 0.262, 0.680, 0.153, 0.243, 0.227, 0.200, 0.142, …
+## $ influence           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+## $ approve             &lt;dbl&gt; 45.0, 46.0, 42.1, 45.0, 46.0, 57.0, 42.3, 36.0, 4…
+## $ disapprove          &lt;dbl&gt; 45.0, 37.0, 45.2, 46.0, 45.0, 43.0, 45.8, 44.0, 3…
+## $ adjusted_approve    &lt;dbl&gt; 45.8, 45.3, 43.2, 45.8, 46.8, 51.6, 43.4, 37.7, 4…
+## $ adjusted_disapprove &lt;dbl&gt; 43.6, 37.8, 43.9, 44.6, 43.6, 44.4, 44.5, 42.8, 3…
+## $ multiversions       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+## $ tracking            &lt;lgl&gt; TRUE, NA, TRUE, TRUE, TRUE, TRUE, TRUE, NA, NA, T…
+## $ url                 &lt;chr&gt; &quot;http://www.gallup.com/poll/201617/gallup-daily-t…
+## $ poll_id             &lt;dbl&gt; 49253, 49249, 49426, 49262, 49236, 49266, 49425, …
+## $ question_id         &lt;dbl&gt; 77265, 77261, 77599, 77274, 77248, 77278, 77598, …
+## $ createddate         &lt;chr&gt; &quot;1/23/2017&quot;, &quot;1/23/2017&quot;, &quot;3/1/2017&quot;, &quot;1/24/2017&quot;…
+## $ timestamp           &lt;chr&gt; &quot;13:38:37 29 Aug 2020&quot;, &quot;13:38:37 29 Aug 2020&quot;, &quot;…</code></pre>
+<pre class="r"><code>#Use lubridate to fix the dates as they are given as characters
+approval_polllist$modeldate&lt;-mdy(approval_polllist$modeldate)
+approval_polllist$startdate&lt;-mdy(approval_polllist$startdate)
+approval_polllist$enddate&lt;-mdy(approval_polllist$enddate)
+approval_polllist$createddate&lt;-mdy(approval_polllist$createddate)</code></pre>
+<div id="create-a-plot" class="section level2">
+<h2>Create a plot</h2>
+<p>We will calculate the average net approval rate (approve-disapprove) for each week since Trump got into office, and plot the net approval along with the 95% confidence intervals.</p>
+<pre class="r"><code>Trump_approval&lt;-approval_polllist%&gt;%
+  #Filter to select the voters only from the subgroup list
+filter(subgroup==&quot;Voters&quot;)%&gt;%
+  #Create the relevant variables: get the week and year from the enddate, and create plotting variable &quot;net approval&quot;
+  mutate(date=enddate,week=week(date),year=year(date),net_approval=approve-disapprove)%&gt;%
+  group_by(week,year)%&gt;%
+  #Calculate the relevant statistics: mean, count, standard dev, standard error, t critical, and CI boundaries
+  summarise(mean=mean(net_approval),stdev=sd(net_approval),count=n(),se=stdev/sqrt(count),t_critical=qt(0.975,count-1),lower_bound=mean-t_critical,upper_bound=mean+t_critical)
+#Remove outlier
+Trump_approval&lt;- Trump_approval[-189,]
+
+#Plot the relevant variables
+ggplot(Trump_approval,aes(x=week,fill=as.factor(year)))+scale_fill_manual(values = c(&quot;red&quot;,&quot;green&quot;,&quot;#66FFFF&quot;,&quot;#E5CCFF&quot;))+
+  geom_line(aes(y=lower_bound))+geom_line(aes(y=mean))+ 
+  geom_line(aes(y=upper_bound))+geom_point(aes(y=mean))+
+  #Shade the confidence interval
+  geom_ribbon(aes(ymin=lower_bound,ymax=upper_bound),alpha=0.3)+facet_wrap(~year)+
+  #Create a horizontal line at y=0
+  geom_hline(yintercept=0, size=1.5, color=&quot;orange&quot;)+
+  labs(title=&quot;Estimating Net Approval (approve-disapprove) for Donald Trump
+&quot;,subtitle=&quot;Weekly average of all polls&quot;,x=&quot;Week of the year&quot;,y=&quot;Average Net Approval (%)&quot;)+
+  
+  #Customize the size of the font, scales and background, and gridline colours
+  theme(text = element_text(size = 12),legend.position = &quot;none&quot;, panel.background = element_rect(fill = &quot;white&quot;,
+                                colour = &quot;white&quot;,
+                                size = 0.5, linetype = &quot;solid&quot;),
+  panel.grid.major = element_line(size = 0.5, linetype = &#39;solid&#39;,
+                                colour = &quot;grey&quot;), 
+  panel.grid.minor = element_line(size = 0.25, linetype = &#39;solid&#39;,
+                                colour = &quot;grey&quot;)) + 
+  scale_y_continuous(breaks=c(-20,-17.5,-15,-12.5,-10,-7.5,-5,-2.5,0,2.5,5.0,7.5))+
+  scale_x_continuous(breaks=c(0, 13,26,39,52))</code></pre>
+<p><img src="/blogs/blog7_files/figure-html/Trump-1.png" width="960" style="display: block; margin: auto;" />
+For the sake of reference, we can compare our plots to the ones below and observe that the values and trends match.</p>
+<p><img src="/Users/carlotacastroperez/Documents/R_programming/my_website2/images/trump_approval_margin.png" width="100%" style="display: block; margin: auto;" />
+## Compare Confidence Intervals</p>
+<p>If we compare the confidence intervals for <code>week 15</code> (6-12 April 2020) and <code>week 34</code> (17-23 August 2020), we can observe that the confidence interval for the second week is wider. The confidence interval is a function of the level of confidence, the standard deviation/variability and the sample size. Since the level of confidence is kept constant at 95%, we can collude that either the variability has increased and/or the sample size has diminished (i.e. less polls were conducted). By analyzing the numerical data, we can confirm that in week 34 the standard deviation increased by 64.7% and the sample size decreased by 11%.</p>
+</div>
+</div>
