@@ -94,19 +94,19 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "NYT Masks"
       subtitle = "How does mask use acceptance vary in the us?"
-      image = "pic07.jpg"
+      image = "pic01.jpg"
       url = "blogs/blog5"
 
     [[params.tiles.showcase]]
-      title = "Tempus"
-      subtitle = "Feugiat Amet Tempus"
-      image = "pic02.jpg"
-      url = "blogs/tempus"
+      title = "Salaries according to gender"
+      subtitle = "Are men and women's salaries equal?"
+      image = "salaries.jpg"
+      url = "blogs/blog6"
 
     [[params.tiles.showcase]]
-      title = "Magna"
-      subtitle = "Lorem Etiam Nullam"
-      image = "pic11.jpg"
+      title = "Trump's popularity"
+      subtitle = "How has the approval rate varied throughout his time in office?"
+      image = "Trump.jpg"
       url = "blogs/magna"
 
     [[params.tiles.showcase]]
