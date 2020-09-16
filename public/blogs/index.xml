@@ -25,8 +25,8 @@ The dataset consists of the following variable: Besides the obvious variables of
       
       <guid>/blogs/blog8/</guid>
       <description>Where Do People Drink The Most Beer, Wine And Spirits? Back in 2014, fivethiryeight.com published an article on alcohol consumption in different countries.
-Checking data quality for drinks dataset ## [1] 0 ## [1] FALSE Based on checking the dataset, there are no missing values or any duplicates. Datatypes as indicated in the table.
- Top 25 beer consuming countries top_beer &amp;lt;- drinks %&amp;gt;% arrange(desc(beer_servings)) ggplot(head(top_beer, 25), aes(x=reorder(country, beer_servings), y = beer_servings)) + labs(y = &amp;quot;Servings of Beer&amp;quot;, x = &amp;quot;Country&amp;quot;, title = &amp;quot;Beer Consumption by Country&amp;quot;) + geom_bar(stat=&amp;#39;identity&amp;#39;, show.</description>
+Checking data quality for drinks dataset ## [1] 0 ## [1] FALSE Based on checking the dataset, there are no missing values or any duplicates.
+ Top 25 beer consuming countries # Get the data from drinks and create a variable top_beer top_beer &amp;lt;- drinks %&amp;gt;% # Arrange the beer consuming countries in descending order arrange(desc(beer_servings)) # Plot the findings; use head to choose the top 25 beer consuming countries ggplot(head(top_beer, 25), aes(x=reorder(country, beer_servings), y = beer_servings)) + # Customize the plot; add the titles, and the axes labels labs(y = &amp;quot;Servings of Beer&amp;quot;, x = &amp;quot;&amp;quot;, title = &amp;quot;Namibians like beer the most!</description>
     </item>
     
     <item>

@@ -47,8 +47,11 @@ library(kableExtra)
 
 Back in 2014, [fivethiryeight.com](https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/) published an article on alcohol consumption in different countries.
 
+
 ```{r, load_alcohol_data, echo=FALSE}
+#Load the library fivethirtyeight
 library(fivethirtyeight)
+#Load the data drinks
 data(drinks)
 
 # alcohol_direct <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/alcohol-consumption/drinks.csv")
@@ -58,61 +61,75 @@ data(drinks)
 
 ```{r glimpse_skim_data, echo=FALSE}
 
-#datatypes_drinks <- drinks %>%
-#  sapply(drinks,class) %>% 
-#  kbl()
-
+# We need to check whether any of the drinks is duplicated
 anyDuplicated(drinks)
-
+# We need to check whether there are any NA drinks
 anyNA(drinks)
 
-# glimpse(drinks)
-# skim(drinks)
 ```
-
-Based on checking the dataset, there are no missing values or any duplicates. Datatypes as indicated in the table. 
+Based on checking the dataset, there are no missing values or any duplicates. 
 
 ## Top 25 beer consuming countries
 
 ```{r beer_plot}
-
+# Get the data from drinks and create a variable top_beer
 top_beer <- drinks %>%
+# Arrange the beer consuming countries in descending order
   arrange(desc(beer_servings))
 
+# Plot the findings; use head to choose the top 25 beer consuming countries
 ggplot(head(top_beer, 25), aes(x=reorder(country, beer_servings), y = beer_servings)) +
-  labs(y = "Servings of Beer", x = "Country", title = "Beer Consumption by Country") +
+  # Customize the plot; add the titles, and the axes labels
+  labs(y = "Servings of Beer", x = "", title = "Namibians like beer the most!",
+       subtitle="Beer consumption by country") +
+  # Use geom bar for categorical variables
   geom_bar(stat='identity', show.legend = FALSE, fill = 'red') +
+  #Flip the coordinates
   coord_flip() +
+  #Customize the theme
   theme_clean()
-
 ```
+The top 5 beer consuming countries are: Namibia, Czech Republic, Gabon, Germany and Poland.
+
 ## Top 25 wine consuming countries
 
 ```{r wine_plot}
-
+# Get the data from drinks and create a variable top_wine
 top_wine <- drinks %>%
+  # Arrange the wine consuming countries in descending order
   arrange(desc(wine_servings))
 
+ # Plot the findings; use head to choose the top 25 wine consuming countries 
 ggplot(head(top_wine, 25), aes(x=reorder(country, wine_servings), y = wine_servings)) +
-  labs(y = "Servings of Wine", x = "Country", title = "Wine Consumption by Country") +
+  # Customize the plot; add the titles, and the axes labels
+  labs(y = "Servings of Wine", x = "", title = "French are wine number 1 consumers!",
+       subtitle = "Wine consumption by country") +
+   # Use geom bar for categorical variables
   geom_bar(stat='identity', show.legend = FALSE, fill = 'lightblue') + 
+ #Flip the coordinates
   coord_flip() +
+   #Customize the theme
   theme_clean()
-
 
 ```
 ## Top 25 spirit consuming countries
 
 ```{r spirit_plot}
-
+# Get the data from drinks and create a variable top_spirits
 top_spirits <- drinks %>%
+ # Arrange the spirit consuming countries in descending order
   arrange(desc(spirit_servings))
 
+# Plot the findings; use head to choose the top 25 spirit consuming countries 
 ggplot(head(top_spirits, 25), aes(x=reorder(country, spirit_servings), y = spirit_servings)) +
-  labs(y = "Servings of Spirits", x = "Country", title = "Spirit Consumption by Country") +
+   # Customize the plot; add the titles, and the axes labels
+  labs(y = "Servings of Spirits", x = "",title="Grenadians are the greatest spirit consumers! ",subtitle = "Spirit Consumption by Country") +
   geom_bar(stat='identity', show.legend = FALSE, fill = 'green') + 
+   # Flip the coordinates
   coord_flip() +
+   # Customize the theme
   theme_clean()
 
 ```
+
 Consumption of alcoholic beverages differs across geographies and exposes national preferences and traditions in terms of beers, spirits and wines. Looking at the example of wine consumption, highest consumption per capita can be seen for countries with traditionally high production of wine (France, Portugal) while Switzerland and Denmark are more on the side of consumption. Overall, consumption patterns in terms of beverages likely align to a large extend with the national cuisine and food preferences, i.e. beer being paired with traditional German style meals. 
