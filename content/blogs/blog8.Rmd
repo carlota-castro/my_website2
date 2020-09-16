@@ -1,0 +1,118 @@
+---
+categories:
+- ""
+- ""
+date: "2020-09-15"
+description: Consumption of wine,spirits and beer
+draft: false
+image: Flags.jpg
+keywords: ""
+slug: blog8
+title: Have you ever wondered...?
+---
+
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(kableExtra)
+```
+
+# Where Do People Drink The Most Beer, Wine And Spirits?
+
+Back in 2014, [fivethiryeight.com](https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/) published an article on alcohol consumption in different countries.
+
+```{r, load_alcohol_data, echo=FALSE}
+library(fivethirtyeight)
+data(drinks)
+
+# alcohol_direct <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/alcohol-consumption/drinks.csv")
+```
+
+## Checking data quality for drinks dataset 
+
+```{r glimpse_skim_data, echo=FALSE}
+
+#datatypes_drinks <- drinks %>%
+#  sapply(drinks,class) %>% 
+#  kbl()
+
+anyDuplicated(drinks)
+
+anyNA(drinks)
+
+# glimpse(drinks)
+# skim(drinks)
+```
+
+Based on checking the dataset, there are no missing values or any duplicates. Datatypes as indicated in the table. 
+
+## Top 25 beer consuming countries
+
+```{r beer_plot}
+
+top_beer <- drinks %>%
+  arrange(desc(beer_servings))
+
+ggplot(head(top_beer, 25), aes(x=reorder(country, beer_servings), y = beer_servings)) +
+  labs(y = "Servings of Beer", x = "Country", title = "Beer Consumption by Country") +
+  geom_bar(stat='identity', show.legend = FALSE, fill = 'red') +
+  coord_flip() +
+  theme_clean()
+
+```
+## Top 25 wine consuming countries
+
+```{r wine_plot}
+
+top_wine <- drinks %>%
+  arrange(desc(wine_servings))
+
+ggplot(head(top_wine, 25), aes(x=reorder(country, wine_servings), y = wine_servings)) +
+  labs(y = "Servings of Wine", x = "Country", title = "Wine Consumption by Country") +
+  geom_bar(stat='identity', show.legend = FALSE, fill = 'lightblue') + 
+  coord_flip() +
+  theme_clean()
+
+
+```
+## Top 25 spirit consuming countries
+
+```{r spirit_plot}
+
+top_spirits <- drinks %>%
+  arrange(desc(spirit_servings))
+
+ggplot(head(top_spirits, 25), aes(x=reorder(country, spirit_servings), y = spirit_servings)) +
+  labs(y = "Servings of Spirits", x = "Country", title = "Spirit Consumption by Country") +
+  geom_bar(stat='identity', show.legend = FALSE, fill = 'green') + 
+  coord_flip() +
+  theme_clean()
+
+```
+Consumption of alcoholic beverages differs across geographies and exposes national preferences and traditions in terms of beers, spirits and wines. Looking at the example of wine consumption, highest consumption per capita can be seen for countries with traditionally high production of wine (France, Portugal) while Switzerland and Denmark are more on the side of consumption. Overall, consumption patterns in terms of beverages likely align to a large extend with the national cuisine and food preferences, i.e. beer being paired with traditional German style meals. 

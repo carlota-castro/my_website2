@@ -8,7 +8,29 @@
     <language>en-us</language>
     <lastBuildDate>Tue, 15 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Trump approval</title>
+      <title>Analysis of several movies</title>
+      <link>/blogs/blog9/</link>
+      <pubDate>Tue, 15 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog9/</guid>
+      <description>Analysis of movies- IMDB dataset For the following analysis, we use a subset sample of movies, taken from the Kaggle IMDB 5000 movie dataset
+The dataset consists of the following variable: Besides the obvious variables of title, genre, director, year, and duration, the rest of the variables are as follows:
+ title: Movie title genre: Movie genre director: Movie director year: Year the movie was published duration: Duration of the movie gross: The gross earnings in the US box office, not adjusted for inflation budget: The movie’s budget cast_facebook_likes: the number of facebook likes cast members received votes: the number of people who voted for (or rated) the movie in IMDB reviews: the number of reviews for that movie rating: IMDB average rating  Data exploration of the movies dataset Data structure There are no missing values (NAs) in the dataset.</description>
+    </item>
+    
+    <item>
+      <title>Have you ever wondered...?</title>
+      <link>/blogs/blog8/</link>
+      <pubDate>Tue, 15 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog8/</guid>
+      <description>Where Do People Drink The Most Beer, Wine And Spirits? Back in 2014, fivethiryeight.com published an article on alcohol consumption in different countries.
+Checking data quality for drinks dataset ## [1] 0 ## [1] FALSE Based on checking the dataset, there are no missing values or any duplicates. Datatypes as indicated in the table.
+ Top 25 beer consuming countries top_beer &amp;lt;- drinks %&amp;gt;% arrange(desc(beer_servings)) ggplot(head(top_beer, 25), aes(x=reorder(country, beer_servings), y = beer_servings)) + labs(y = &amp;quot;Servings of Beer&amp;quot;, x = &amp;quot;Country&amp;quot;, title = &amp;quot;Beer Consumption by Country&amp;quot;) + geom_bar(stat=&amp;#39;identity&amp;#39;, show.</description>
+    </item>
+    
+    <item>
+      <title>How has Trump approval rate varied?</title>
       <link>/blogs/blog7/</link>
       <pubDate>Tue, 15 Sep 2020 00:00:00 +0000</pubDate>
       

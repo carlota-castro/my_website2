@@ -1,0 +1,1319 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="MAM student LBS; Aerospace engineer">
+	<meta name="author" content="Carlota Castro">
+	<meta name="generator" content="Hugo 0.75.0" />
+	<title>Analysis of several movies &middot; Portfolio website for Carlota Castro</title>
+	<!-- Stylesheets -->
+	
+	<link rel="stylesheet" href="/css/main.css"/>
+	
+	
+
+	
+
+	<!-- Custom Fonts -->
+	<link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/ie/html5shiv.js"></script>
+	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
+	<![endif]-->
+</head>
+
+    <body>
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+    <header id="header" class="alt">
+        <a href="/" class="logo"><strong>Carlota Castro</strong> <span></span></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+
+<!-- Menu -->
+    <nav id="menu">
+        <ul class="links">
+            
+                <li><a href="/">Home</a></li>
+            
+                <li><a href="/blogs">Blogs</a></li>
+            
+
+        </ul>
+        <ul class="actions vertical">
+            
+                <li><a href="/blogs" class="button special fit">My Projects</a></li>
+            
+            
+        </ul>
+    </nav>
+
+        <!-- Main -->
+            <div id="main" class="alt">
+
+                
+                    <section id="one">
+                        <div class="inner">
+                            <header class="major">
+                                <h1>Analysis of several movies</h1>
+                            </header>
+                            
+                                <span class="image main"><img src="/img/blogs/movies_image.jpg" alt="" /></span>
+                            
+                            
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+
+
+<div id="analysis-of-movies--imdb-dataset" class="section level1">
+<h1>Analysis of movies- IMDB dataset</h1>
+<p>For the following analysis, we use a subset sample of movies, taken from the <a href="https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset">Kaggle IMDB 5000 movie dataset</a></p>
+<p>The dataset consists of the following variable: Besides the obvious variables of <code>title</code>, <code>genre</code>, <code>director</code>, <code>year</code>, and <code>duration</code>, the rest of the variables are as follows:</p>
+<ul>
+<li><code>title</code>: Movie title</li>
+<li><code>genre</code>: Movie genre</li>
+<li><code>director</code>: Movie director</li>
+<li><code>year</code>: Year the movie was published</li>
+<li><code>duration</code>: Duration of the movie</li>
+<li><code>gross</code>: The gross earnings in the US box office, not adjusted for inflation</li>
+<li><code>budget</code>: The movie’s budget</li>
+<li><code>cast_facebook_likes</code>: the number of facebook likes cast members received</li>
+<li><code>votes</code>: the number of people who voted for (or rated) the movie in IMDB</li>
+<li><code>reviews</code>: the number of reviews for that movie</li>
+<li><code>rating</code>: IMDB average rating</li>
+</ul>
+<div id="data-exploration-of-the-movies-dataset" class="section level2">
+<h2>Data exploration of the movies dataset</h2>
+<div id="data-structure" class="section level3">
+<h3>Data structure</h3>
+<p>There are no missing values (NAs) in the dataset. Equally, there are no duplicate rows (= identical for each column) but there is a total of <strong>54</strong> duplicate rows based on titles, director, year and movie duration. The duplicates differ on the number of votes and thus the rating. For the following analysis we removed the the duplicate rows and chose a random value for the movie rating.</p>
+<pre class="r"><code># Checking for missing values
+anyNA(movies)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># Checking if there are duplicates based on title, director, year, duration
+dupes &lt;- movies %&gt;%
+  select(title, director, year, duration) %&gt;%
+  duplicated()
+
+table(dupes)[&quot;TRUE&quot;]</code></pre>
+<pre><code>## TRUE 
+##   54</code></pre>
+<pre class="r"><code>movies_cleaned &lt;- movies[!dupes,]</code></pre>
+</div>
+<div id="movies-per-genre" class="section level3">
+<h3>Movies per genre</h3>
+<pre class="r"><code>movies_by_genre &lt;- movies_cleaned %&gt;%
+  group_by(genre) %&gt;%
+  count(sort = TRUE)
+
+movies_by_genre %&gt;%
+  kbl(col.names = c(&quot;Genre&quot;, &quot;Movie count&quot;)) %&gt;%
+  kable_material(c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
+  kable_styling(fixed_thead = T)</code></pre>
+<table class=" lightable-material lightable-striped lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Genre
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Movie count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Comedy
+</td>
+<td style="text-align:right;">
+844
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Action
+</td>
+<td style="text-align:right;">
+719
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Drama
+</td>
+<td style="text-align:right;">
+484
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Adventure
+</td>
+<td style="text-align:right;">
+281
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crime
+</td>
+<td style="text-align:right;">
+198
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Biography
+</td>
+<td style="text-align:right;">
+135
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Horror
+</td>
+<td style="text-align:right;">
+128
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Animation
+</td>
+<td style="text-align:right;">
+35
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fantasy
+</td>
+<td style="text-align:right;">
+26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Documentary
+</td>
+<td style="text-align:right;">
+25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mystery
+</td>
+<td style="text-align:right;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sci-Fi
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Family
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Musical
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Romance
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Western
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Thriller
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="financial-performance" class="section level3">
+<h3>Financial performance</h3>
+<pre class="r"><code>genre_gross_budget &lt;- movies_cleaned %&gt;%
+  mutate(return_on_budget = gross/budget) %&gt;%
+  group_by(genre) %&gt;%
+  summarize(mean_gross = mean(gross)/1000000, mean_budget = mean(budget)/1000000, 
+            mean_return = mean(return_on_budget)) %&gt;%
+  arrange(desc(mean_return))
+
+genre_gross_budget %&gt;% 
+ kbl(col.names = c(&quot;Genre&quot;, &quot;Mean Gross (mm)&quot;, &quot;Mean Budget (mm)&quot;, &quot;Mean Return&quot;), digits = 2) %&gt;%
+  kable_material(c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
+  kable_styling(fixed_thead = T)</code></pre>
+<table class=" lightable-material lightable-striped lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Genre
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Mean Gross (mm)
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Mean Budget (mm)
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Mean Return
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Horror
+</td>
+<td style="text-align:right;">
+37.8
+</td>
+<td style="text-align:right;">
+13.80
+</td>
+<td style="text-align:right;">
+86.15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Biography
+</td>
+<td style="text-align:right;">
+45.2
+</td>
+<td style="text-align:right;">
+28.54
+</td>
+<td style="text-align:right;">
+22.28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Musical
+</td>
+<td style="text-align:right;">
+92.1
+</td>
+<td style="text-align:right;">
+3.19
+</td>
+<td style="text-align:right;">
+18.82
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Family
+</td>
+<td style="text-align:right;">
+149.2
+</td>
+<td style="text-align:right;">
+14.83
+</td>
+<td style="text-align:right;">
+14.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Documentary
+</td>
+<td style="text-align:right;">
+17.4
+</td>
+<td style="text-align:right;">
+5.89
+</td>
+<td style="text-align:right;">
+8.70
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Western
+</td>
+<td style="text-align:right;">
+20.8
+</td>
+<td style="text-align:right;">
+3.46
+</td>
+<td style="text-align:right;">
+7.06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fantasy
+</td>
+<td style="text-align:right;">
+41.9
+</td>
+<td style="text-align:right;">
+18.48
+</td>
+<td style="text-align:right;">
+6.10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Animation
+</td>
+<td style="text-align:right;">
+98.4
+</td>
+<td style="text-align:right;">
+61.70
+</td>
+<td style="text-align:right;">
+5.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Comedy
+</td>
+<td style="text-align:right;">
+42.5
+</td>
+<td style="text-align:right;">
+24.46
+</td>
+<td style="text-align:right;">
+3.70
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Romance
+</td>
+<td style="text-align:right;">
+31.3
+</td>
+<td style="text-align:right;">
+25.11
+</td>
+<td style="text-align:right;">
+3.17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Drama
+</td>
+<td style="text-align:right;">
+36.8
+</td>
+<td style="text-align:right;">
+25.83
+</td>
+<td style="text-align:right;">
+2.98
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mystery
+</td>
+<td style="text-align:right;">
+69.1
+</td>
+<td style="text-align:right;">
+41.50
+</td>
+<td style="text-align:right;">
+2.90
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Adventure
+</td>
+<td style="text-align:right;">
+94.3
+</td>
+<td style="text-align:right;">
+64.69
+</td>
+<td style="text-align:right;">
+2.44
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crime
+</td>
+<td style="text-align:right;">
+37.6
+</td>
+<td style="text-align:right;">
+26.53
+</td>
+<td style="text-align:right;">
+2.19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Action
+</td>
+<td style="text-align:right;">
+86.3
+</td>
+<td style="text-align:right;">
+70.77
+</td>
+<td style="text-align:right;">
+1.93
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sci-Fi
+</td>
+<td style="text-align:right;">
+29.8
+</td>
+<td style="text-align:right;">
+27.61
+</td>
+<td style="text-align:right;">
+1.58
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Thriller
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+</tr>
+</tbody>
+</table>
+<p>This table shows that the most profitable movies are by far horror movies. This genre could be considered as an outlier since it is on average 4 times more profitable than the second on the list, which is Biography. Conversely, the least profitable genre is “Thriller” and it is unexpectedly low. However, it would not be relevant to assert that it is not a profitable genre, since there is only 1 thriller movie in our data frame. As a rule of thumb, we could assume that it would be difficult to conclude without a significant sample size of at least n=30 movies. Hence, we will not comment on which genre is the least profitable one, but it is fair to conclude that horror movies are indeed very profitable.</p>
+</div>
+<div id="top-directors" class="section level3">
+<h3>Top directors</h3>
+<pre class="r"><code>top_directors &lt;- movies_cleaned %&gt;%
+  group_by(director) %&gt;%
+  summarize(total = sum(gross)/1000000, mean = mean(gross)/1000000,
+            median = median(gross)/1000000, st_dev=STDEV(gross)) %&gt;%
+  arrange(desc(total)) %&gt;%
+  head(15)
+
+top_directors %&gt;%
+  kbl(col.names = c(&quot;Director&quot;, &quot;Total Revenue (mm)&quot;, &quot;Mean Revenue (mm)&quot;, &quot;Median Revenue (mm)&quot;, &quot;SD of Revenue (mm)&quot;)) %&gt;%
+  kable_material(c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
+  kable_styling(fixed_thead = T)</code></pre>
+<table class=" lightable-material lightable-striped lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Director
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Total Revenue (mm)
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Mean Revenue (mm)
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Median Revenue (mm)
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+SD of Revenue (mm)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Steven Spielberg
+</td>
+<td style="text-align:right;">
+4014
+</td>
+<td style="text-align:right;">
+174.5
+</td>
+<td style="text-align:right;">
+164.4
+</td>
+<td style="text-align:right;">
+1.01e+08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michael Bay
+</td>
+<td style="text-align:right;">
+2195
+</td>
+<td style="text-align:right;">
+183.0
+</td>
+<td style="text-align:right;">
+168.5
+</td>
+<td style="text-align:right;">
+1.26e+08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+James Cameron
+</td>
+<td style="text-align:right;">
+1910
+</td>
+<td style="text-align:right;">
+318.3
+</td>
+<td style="text-align:right;">
+175.6
+</td>
+<td style="text-align:right;">
+3.09e+08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Christopher Nolan
+</td>
+<td style="text-align:right;">
+1813
+</td>
+<td style="text-align:right;">
+226.7
+</td>
+<td style="text-align:right;">
+196.7
+</td>
+<td style="text-align:right;">
+1.87e+08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+George Lucas
+</td>
+<td style="text-align:right;">
+1741
+</td>
+<td style="text-align:right;">
+348.3
+</td>
+<td style="text-align:right;">
+380.3
+</td>
+<td style="text-align:right;">
+1.46e+08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Robert Zemeckis
+</td>
+<td style="text-align:right;">
+1619
+</td>
+<td style="text-align:right;">
+124.6
+</td>
+<td style="text-align:right;">
+100.9
+</td>
+<td style="text-align:right;">
+9.13e+07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tim Burton
+</td>
+<td style="text-align:right;">
+1557
+</td>
+<td style="text-align:right;">
+111.2
+</td>
+<td style="text-align:right;">
+69.8
+</td>
+<td style="text-align:right;">
+9.93e+07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sam Raimi
+</td>
+<td style="text-align:right;">
+1443
+</td>
+<td style="text-align:right;">
+180.4
+</td>
+<td style="text-align:right;">
+138.5
+</td>
+<td style="text-align:right;">
+1.75e+08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Clint Eastwood
+</td>
+<td style="text-align:right;">
+1378
+</td>
+<td style="text-align:right;">
+72.5
+</td>
+<td style="text-align:right;">
+46.7
+</td>
+<td style="text-align:right;">
+7.55e+07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Francis Lawrence
+</td>
+<td style="text-align:right;">
+1359
+</td>
+<td style="text-align:right;">
+271.7
+</td>
+<td style="text-align:right;">
+281.7
+</td>
+<td style="text-align:right;">
+1.35e+08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ron Howard
+</td>
+<td style="text-align:right;">
+1336
+</td>
+<td style="text-align:right;">
+111.3
+</td>
+<td style="text-align:right;">
+101.6
+</td>
+<td style="text-align:right;">
+8.19e+07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gore Verbinski
+</td>
+<td style="text-align:right;">
+1330
+</td>
+<td style="text-align:right;">
+189.9
+</td>
+<td style="text-align:right;">
+123.2
+</td>
+<td style="text-align:right;">
+1.54e+08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Andrew Adamson
+</td>
+<td style="text-align:right;">
+1137
+</td>
+<td style="text-align:right;">
+284.4
+</td>
+<td style="text-align:right;">
+279.7
+</td>
+<td style="text-align:right;">
+1.21e+08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Shawn Levy
+</td>
+<td style="text-align:right;">
+1130
+</td>
+<td style="text-align:right;">
+102.7
+</td>
+<td style="text-align:right;">
+85.5
+</td>
+<td style="text-align:right;">
+6.55e+07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ridley Scott
+</td>
+<td style="text-align:right;">
+1129
+</td>
+<td style="text-align:right;">
+80.6
+</td>
+<td style="text-align:right;">
+47.8
+</td>
+<td style="text-align:right;">
+6.88e+07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="ratings-distribution" class="section level3">
+<h3>Ratings distribution</h3>
+<pre class="r"><code>genre_ratings &lt;- movies_cleaned %&gt;%
+  group_by(genre) %&gt;%
+  summarize(Minimum_Rating = min(rating), Max_Rating = max(rating), 
+            Mean_Rating = mean(rating), Median_Rating = median(rating), 
+            st_dev=STDEV(rating))
+genre_ratings %&gt;%
+  kbl(col.names = gsub(&quot;[_]&quot;, &quot; &quot;, names(genre_ratings))) %&gt;%
+  kable_material(c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
+  kable_styling(fixed_thead = T)</code></pre>
+<table class=" lightable-material lightable-striped lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+genre
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Minimum Rating
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Max Rating
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Mean Rating
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Median Rating
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+st dev
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Action
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:right;">
+9.0
+</td>
+<td style="text-align:right;">
+6.23
+</td>
+<td style="text-align:right;">
+6.30
+</td>
+<td style="text-align:right;">
+1.039
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Adventure
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:right;">
+8.6
+</td>
+<td style="text-align:right;">
+6.51
+</td>
+<td style="text-align:right;">
+6.60
+</td>
+<td style="text-align:right;">
+1.106
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Animation
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+8.0
+</td>
+<td style="text-align:right;">
+6.65
+</td>
+<td style="text-align:right;">
+6.90
+</td>
+<td style="text-align:right;">
+0.968
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Biography
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+8.9
+</td>
+<td style="text-align:right;">
+7.11
+</td>
+<td style="text-align:right;">
+7.20
+</td>
+<td style="text-align:right;">
+0.760
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Comedy
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:right;">
+8.8
+</td>
+<td style="text-align:right;">
+6.11
+</td>
+<td style="text-align:right;">
+6.20
+</td>
+<td style="text-align:right;">
+1.024
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crime
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+9.3
+</td>
+<td style="text-align:right;">
+6.92
+</td>
+<td style="text-align:right;">
+6.90
+</td>
+<td style="text-align:right;">
+0.853
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Documentary
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+8.5
+</td>
+<td style="text-align:right;">
+6.66
+</td>
+<td style="text-align:right;">
+7.40
+</td>
+<td style="text-align:right;">
+1.767
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Drama
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:right;">
+8.8
+</td>
+<td style="text-align:right;">
+6.74
+</td>
+<td style="text-align:right;">
+6.80
+</td>
+<td style="text-align:right;">
+0.915
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Family
+</td>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+7.9
+</td>
+<td style="text-align:right;">
+6.50
+</td>
+<td style="text-align:right;">
+5.90
+</td>
+<td style="text-align:right;">
+1.217
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fantasy
+</td>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+7.9
+</td>
+<td style="text-align:right;">
+6.08
+</td>
+<td style="text-align:right;">
+6.20
+</td>
+<td style="text-align:right;">
+0.953
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Horror
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+8.5
+</td>
+<td style="text-align:right;">
+5.79
+</td>
+<td style="text-align:right;">
+5.85
+</td>
+<td style="text-align:right;">
+0.987
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Musical
+</td>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+7.2
+</td>
+<td style="text-align:right;">
+6.75
+</td>
+<td style="text-align:right;">
+6.75
+</td>
+<td style="text-align:right;">
+0.636
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mystery
+</td>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+8.5
+</td>
+<td style="text-align:right;">
+6.84
+</td>
+<td style="text-align:right;">
+6.70
+</td>
+<td style="text-align:right;">
+0.910
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Romance
+</td>
+<td style="text-align:right;">
+6.2
+</td>
+<td style="text-align:right;">
+7.1
+</td>
+<td style="text-align:right;">
+6.65
+</td>
+<td style="text-align:right;">
+6.65
+</td>
+<td style="text-align:right;">
+0.636
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sci-Fi
+</td>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+8.2
+</td>
+<td style="text-align:right;">
+6.66
+</td>
+<td style="text-align:right;">
+6.40
+</td>
+<td style="text-align:right;">
+1.094
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Thriller
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+4.80
+</td>
+<td style="text-align:right;">
+4.80
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Western
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+7.3
+</td>
+<td style="text-align:right;">
+5.70
+</td>
+<td style="text-align:right;">
+5.70
+</td>
+<td style="text-align:right;">
+2.263
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ggplot(movies, aes(x = rating, group = genre)) +
+  geom_density(alpha = 0.4, show.legend = F, fill = &#39;lightblue&#39;) +
+  labs(title = &quot;Density distribution of ratings by genre&quot;, x = &quot;Rating&quot;, y = &quot;Density&quot;) +
+  facet_wrap(~genre) +
+  theme_clean()</code></pre>
+<p><img src="/blogs/blog9_files/figure-html/question5-1.png" width="648" style="display: block; margin: auto;" />
+It is interesting to notice that while horror movies were the most profitable ones, they are also the most disliked movies (after the thriller movie which represents an unsignificant sample). Conversely, Biography movies are the most liked ones and are also very profitable. Perhaps movies are a great source of inspiration, and while there is no dearth of good fictional movies, what really inspires people are biographies.</p>
+</div>
+</div>
+<div id="graphical-descriptive-analysis-based-on-ggplot" class="section level2">
+<h2>Graphical descriptive analysis based on <code>ggplot</code></h2>
+<pre class="r"><code>ggplot(movies, aes(x = cast_facebook_likes, y = gross)) +
+  labs(title= &quot;Relationship between facebook likes and \ngross sales of a movie&quot;, x = &quot;# Likes&quot;, y = &quot;Gross ($)&quot;) +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_continuous(labels = scales::comma) +
+  theme_clean()</code></pre>
+<p><img src="/blogs/blog9_files/figure-html/gross_on_fblikes-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Correlation coefficient
+movies %&gt;%
+  summarize(correlation = cor(cast_facebook_likes,gross)^2)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   correlation
+##         &lt;dbl&gt;
+## 1      0.0454</code></pre>
+<p>There is no direct relationship between the number of facebook likes and the gross sales of a movie which may likely be due to the fact that movies are not primarily promoted though individual facebook pages. The R squared is 0.0454, indicating no significant correlation between the two variables.</p>
+<pre class="r"><code>ggplot(movies, aes(x = budget, y = gross)) +
+  labs(title= &quot;Relationship between budget and gross sales of a movie&quot;, x = &quot;Budget ($)&quot;, y = &quot;Gross ($)&quot;) +
+  geom_point() + 
+  geom_smooth() +
+  scale_y_continuous(labels = scales::dollar) +
+  scale_x_continuous(labels = scales::dollar) +
+  theme_clean()</code></pre>
+<p><img src="/blogs/blog9_files/figure-html/gross_on_budget-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Correlation coefficient
+movies %&gt;%
+  summarize(correlation = cor(budget,gross)^2)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   correlation
+##         &lt;dbl&gt;
+## 1       0.411</code></pre>
+</div>
+</div>
+
+                        </div>
+                    </section>
+            <!-- Disqus Inject -->
+                
+            </div>
+            
+        <!-- Footer -->
+            
+                <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                
+                    <li><a href="https://www.facebook.com/CarlotaCastro97" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+                
+                    <li><a href="https://www.instagram.com/carlota_castro_p/" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+                
+                    <li><a href="https://github.com/carlota-castro/my_website2" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+                
+                    <li><a href="https://www.linkedin.com/in/carlota-castro-perez/" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+                
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Company Name</li>
+                
+                <li>Design:  <a href="https://www.html5up.net">HTML5 UP</a></li>
+                
+            </ul>
+        </div>
+    </footer>
+
+            
+        </div>
+
+    <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+
+    
+
+    <!-- Main JS -->
+    <script src="/js/main.js"></script>
+
+    
+
+    
+
+    </body>
+</html>

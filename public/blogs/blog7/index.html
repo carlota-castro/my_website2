@@ -8,7 +8,7 @@
 	<meta name="description" content="MAM student LBS; Aerospace engineer">
 	<meta name="author" content="Carlota Castro">
 	<meta name="generator" content="Hugo 0.75.0" />
-	<title>Trump approval &middot; Portfolio website for Carlota Castro</title>
+	<title>How has Trump approval rate varied? &middot; Portfolio website for Carlota Castro</title>
 	<!-- Stylesheets -->
 	
 	<link rel="stylesheet" href="/css/main.css"/>
@@ -71,10 +71,10 @@
                     <section id="one">
                         <div class="inner">
                             <header class="major">
-                                <h1>Trump approval</h1>
+                                <h1>How has Trump approval rate varied?</h1>
                             </header>
                             
-                                <span class="image main"><img src="/img/blogs/pic07.jpg" alt="" /></span>
+                                <span class="image main"><img src="/img/blogs/Trump.jpg" alt="" /></span>
                             
                             
 
@@ -115,8 +115,8 @@ approval_polllist$modeldate&lt;-mdy(approval_polllist$modeldate)
 approval_polllist$startdate&lt;-mdy(approval_polllist$startdate)
 approval_polllist$enddate&lt;-mdy(approval_polllist$enddate)
 approval_polllist$createddate&lt;-mdy(approval_polllist$createddate)</code></pre>
-<div id="create-a-plot" class="section level2">
-<h2>Create a plot</h2>
+<div id="graphical-visualization" class="section level2">
+<h2>Graphical visualization</h2>
 <p>We will calculate the average net approval rate (approve-disapprove) for each week since Trump got into office, and plot the net approval along with the 95% confidence intervals.</p>
 <pre class="r"><code>Trump_approval&lt;-approval_polllist%&gt;%
   #Filter to select the voters only from the subgroup list
@@ -152,8 +152,9 @@ ggplot(Trump_approval,aes(x=week,fill=as.factor(year)))+scale_fill_manual(values
   scale_x_continuous(breaks=c(0, 13,26,39,52))</code></pre>
 <p><img src="/blogs/blog7_files/figure-html/Trump-1.png" width="960" style="display: block; margin: auto;" />
 For the sake of reference, we can compare our plots to the ones below and observe that the values and trends match.</p>
-<p><img src="/Users/carlotacastroperez/Documents/R_programming/my_website2/images/trump_approval_margin.png" width="100%" style="display: block; margin: auto;" />
-## Compare Confidence Intervals</p>
+</div>
+<div id="comparing-confidence-intervals" class="section level2">
+<h2>Comparing confidence intervals?</h2>
 <p>If we compare the confidence intervals for <code>week 15</code> (6-12 April 2020) and <code>week 34</code> (17-23 August 2020), we can observe that the confidence interval for the second week is wider. The confidence interval is a function of the level of confidence, the standard deviation/variability and the sample size. Since the level of confidence is kept constant at 95%, we can collude that either the variability has increased and/or the sample size has diminished (i.e. less polls were conducted). By analyzing the numerical data, we can confirm that in week 34 the standard deviation increased by 64.7% and the sample size decreased by 11%.</p>
 </div>
 </div>

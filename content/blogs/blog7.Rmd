@@ -5,10 +5,10 @@ categories:
 date: "2020-09-15"
 description: How has Trump approval rate varied throughout his time in office?
 draft: false
-image: pic07.jpg
+image: Trump.jpg
 keywords: ""
 slug: blog7
-title: Trump approval
+title: How has Trump approval rate varied?
 ---
 
 ```{r, setup, include=FALSE}
@@ -57,7 +57,7 @@ approval_polllist$startdate<-mdy(approval_polllist$startdate)
 approval_polllist$enddate<-mdy(approval_polllist$enddate)
 approval_polllist$createddate<-mdy(approval_polllist$createddate)
 ```
-## Create a plot
+## Graphical visualization
 
 We will calculate the average net approval rate (approve-disapprove) for each week since Trump got into office, and plot the net approval along with the 95% confidence intervals.
 
@@ -98,9 +98,6 @@ ggplot(Trump_approval,aes(x=week,fill=as.factor(year)))+scale_fill_manual(values
 ```
 For the sake of reference, we can compare our plots to the ones below and observe that the values and trends match.
 
-```{r trump_margins, echo=FALSE, out.width="100%"}
-knitr::include_graphics(here::here("images", "trump_approval_margin.png"), error = FALSE)
-```
-## Compare Confidence Intervals
+## Comparing confidence intervals?
 
 If we compare the confidence intervals for `week 15` (6-12 April 2020) and `week 34` (17-23 August 2020), we can observe that the confidence interval for the second week is wider. The confidence interval is a function of the level of confidence, the standard deviation/variability and the sample size. Since the level of confidence is kept constant at 95%, we can collude that either the variability has increased and/or the sample size has diminished (i.e. less polls were conducted). By analyzing the numerical data, we can confirm that in week 34 the standard deviation increased by 64.7% and the sample size decreased by 11%.

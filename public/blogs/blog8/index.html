@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="MAM student LBS; Aerospace engineer">
+	<meta name="author" content="Carlota Castro">
+	<meta name="generator" content="Hugo 0.75.0" />
+	<title>Have you ever wondered...? &middot; Portfolio website for Carlota Castro</title>
+	<!-- Stylesheets -->
+	
+	<link rel="stylesheet" href="/css/main.css"/>
+	
+	
+
+	
+
+	<!-- Custom Fonts -->
+	<link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/ie/html5shiv.js"></script>
+	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
+	<![endif]-->
+</head>
+
+    <body>
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+    <header id="header" class="alt">
+        <a href="/" class="logo"><strong>Carlota Castro</strong> <span></span></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+
+<!-- Menu -->
+    <nav id="menu">
+        <ul class="links">
+            
+                <li><a href="/">Home</a></li>
+            
+                <li><a href="/blogs">Blogs</a></li>
+            
+
+        </ul>
+        <ul class="actions vertical">
+            
+                <li><a href="/blogs" class="button special fit">My Projects</a></li>
+            
+            
+        </ul>
+    </nav>
+
+        <!-- Main -->
+            <div id="main" class="alt">
+
+                
+                    <section id="one">
+                        <div class="inner">
+                            <header class="major">
+                                <h1>Have you ever wondered...?</h1>
+                            </header>
+                            
+                                <span class="image main"><img src="/img/blogs/Flags.jpg" alt="" /></span>
+                            
+                            
+
+
+<div id="where-do-people-drink-the-most-beer-wine-and-spirits" class="section level1">
+<h1>Where Do People Drink The Most Beer, Wine And Spirits?</h1>
+<p>Back in 2014, <a href="https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/">fivethiryeight.com</a> published an article on alcohol consumption in different countries.</p>
+<div id="checking-data-quality-for-drinks-dataset" class="section level2">
+<h2>Checking data quality for drinks dataset</h2>
+<pre><code>## [1] 0</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>Based on checking the dataset, there are no missing values or any duplicates. Datatypes as indicated in the table.</p>
+</div>
+<div id="top-25-beer-consuming-countries" class="section level2">
+<h2>Top 25 beer consuming countries</h2>
+<pre class="r"><code>top_beer &lt;- drinks %&gt;%
+  arrange(desc(beer_servings))
+
+ggplot(head(top_beer, 25), aes(x=reorder(country, beer_servings), y = beer_servings)) +
+  labs(y = &quot;Servings of Beer&quot;, x = &quot;Country&quot;, title = &quot;Beer Consumption by Country&quot;) +
+  geom_bar(stat=&#39;identity&#39;, show.legend = FALSE, fill = &#39;red&#39;) +
+  coord_flip() +
+  theme_clean()</code></pre>
+<p><img src="/blogs/blog8_files/figure-html/beer_plot-1.png" width="648" style="display: block; margin: auto;" />
+## Top 25 wine consuming countries</p>
+<pre class="r"><code>top_wine &lt;- drinks %&gt;%
+  arrange(desc(wine_servings))
+
+ggplot(head(top_wine, 25), aes(x=reorder(country, wine_servings), y = wine_servings)) +
+  labs(y = &quot;Servings of Wine&quot;, x = &quot;Country&quot;, title = &quot;Wine Consumption by Country&quot;) +
+  geom_bar(stat=&#39;identity&#39;, show.legend = FALSE, fill = &#39;lightblue&#39;) + 
+  coord_flip() +
+  theme_clean()</code></pre>
+<p><img src="/blogs/blog8_files/figure-html/wine_plot-1.png" width="648" style="display: block; margin: auto;" />
+## Top 25 spirit consuming countries</p>
+<pre class="r"><code>top_spirits &lt;- drinks %&gt;%
+  arrange(desc(spirit_servings))
+
+ggplot(head(top_spirits, 25), aes(x=reorder(country, spirit_servings), y = spirit_servings)) +
+  labs(y = &quot;Servings of Spirits&quot;, x = &quot;Country&quot;, title = &quot;Spirit Consumption by Country&quot;) +
+  geom_bar(stat=&#39;identity&#39;, show.legend = FALSE, fill = &#39;green&#39;) + 
+  coord_flip() +
+  theme_clean()</code></pre>
+<p><img src="/blogs/blog8_files/figure-html/spirit_plot-1.png" width="648" style="display: block; margin: auto;" />
+Consumption of alcoholic beverages differs across geographies and exposes national preferences and traditions in terms of beers, spirits and wines. Looking at the example of wine consumption, highest consumption per capita can be seen for countries with traditionally high production of wine (France, Portugal) while Switzerland and Denmark are more on the side of consumption. Overall, consumption patterns in terms of beverages likely align to a large extend with the national cuisine and food preferences, i.e. beer being paired with traditional German style meals.</p>
+</div>
+</div>
+
+                        </div>
+                    </section>
+            <!-- Disqus Inject -->
+                
+            </div>
+            
+        <!-- Footer -->
+            
+                <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                
+                    <li><a href="https://www.facebook.com/CarlotaCastro97" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+                
+                    <li><a href="https://www.instagram.com/carlota_castro_p/" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+                
+                    <li><a href="https://github.com/carlota-castro/my_website2" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+                
+                    <li><a href="https://www.linkedin.com/in/carlota-castro-perez/" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+                
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Company Name</li>
+                
+                <li>Design:  <a href="https://www.html5up.net">HTML5 UP</a></li>
+                
+            </ul>
+        </div>
+    </footer>
+
+            
+        </div>
+
+    <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+
+    
+
+    <!-- Main JS -->
+    <script src="/js/main.js"></script>
+
+    
+
+    
+
+    </body>
+</html>

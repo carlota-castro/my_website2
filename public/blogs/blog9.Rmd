@@ -1,0 +1,194 @@
+---
+categories:
+- ""
+- ""
+date: "2020-09-15"
+description: Analysis of several movies
+draft: false
+image: movies_image.jpg
+keywords: ""
+slug: blog9
+title: Analysis of several movies
+---
+
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(kableExtra)
+```
+# Analysis of movies- IMDB dataset
+
+For the following analysis, we use a subset sample of movies, taken from the [Kaggle IMDB 5000 movie dataset](https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset)
+
+  
+```{r,load_movies, warning=FALSE, message=FALSE, echo=FALSE}
+url <- "https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset"
+movies <- vroom::vroom(file = 'data/movies.csv')
+
+```
+
+The dataset consists of the following variable: Besides the obvious variables of `title`, `genre`, `director`, `year`, and `duration`, the rest of the variables are as follows:
+
+* `title`: Movie title
+* `genre`: Movie genre
+* `director`: Movie director
+* `year`: Year the movie was published
+* `duration`: Duration of the movie
+* `gross`: The gross earnings in the US box office, not adjusted for inflation
+* `budget`: The movie's budget 
+* `cast_facebook_likes`: the number of facebook likes cast members received
+* `votes`: the number of people who voted for (or rated) the movie in IMDB 
+* `reviews`: the number of reviews for that movie
+* `rating`: IMDB average rating 
+
+## Data exploration of the movies dataset
+
+### Data structure
+
+There are no missing values (NAs) in the dataset. Equally, there are no duplicate rows (= identical for each column) but there is a total of **54** duplicate rows based on titles, director, year and movie duration. The duplicates differ on the number of votes and thus the rating. For the following analysis we removed the the duplicate rows and chose a random value for the movie rating. 
+
+```{r glimpse_skim_data2}
+
+# Checking for missing values
+anyNA(movies)
+
+# Checking if there are duplicates based on title, director, year, duration
+dupes <- movies %>%
+  select(title, director, year, duration) %>%
+  duplicated()
+
+table(dupes)["TRUE"]
+
+movies_cleaned <- movies[!dupes,]
+
+```
+
+### Movies per genre
+
+```{r, question2}
+
+movies_by_genre <- movies_cleaned %>%
+  group_by(genre) %>%
+  count(sort = TRUE)
+
+movies_by_genre %>%
+  kbl(col.names = c("Genre", "Movie count")) %>%
+  kable_material(c("striped", "hover")) %>%
+  kable_styling(fixed_thead = T)
+
+```
+### Financial performance
+
+```{r, question3}
+genre_gross_budget <- movies_cleaned %>%
+  mutate(return_on_budget = gross/budget) %>%
+  group_by(genre) %>%
+  summarize(mean_gross = mean(gross)/1000000, mean_budget = mean(budget)/1000000, 
+            mean_return = mean(return_on_budget)) %>%
+  arrange(desc(mean_return))
+
+genre_gross_budget %>% 
+ kbl(col.names = c("Genre", "Mean Gross (mm)", "Mean Budget (mm)", "Mean Return"), digits = 2) %>%
+  kable_material(c("striped", "hover")) %>%
+  kable_styling(fixed_thead = T)
+```
+This table shows that the most profitable movies are by far horror movies. This genre could be considered as an outlier since it is on average 4 times more profitable than the second on the list, which is Biography. Conversely, the least profitable genre is “Thriller” and it is unexpectedly low. However, it would not be relevant to assert that it is not a profitable genre, since there is only 1 thriller movie in our data frame. As a rule of thumb, we could assume that it would be difficult to conclude without a significant sample size of at least n=30 movies. Hence,  we will not comment on which genre is the least profitable one, but it is fair to conclude that horror movies are indeed very profitable.
+
+### Top directors
+
+```{r, question4}
+top_directors <- movies_cleaned %>%
+  group_by(director) %>%
+  summarize(total = sum(gross)/1000000, mean = mean(gross)/1000000,
+            median = median(gross)/1000000, st_dev=STDEV(gross)) %>%
+  arrange(desc(total)) %>%
+  head(15)
+
+top_directors %>%
+  kbl(col.names = c("Director", "Total Revenue (mm)", "Mean Revenue (mm)", "Median Revenue (mm)", "SD of Revenue (mm)")) %>%
+  kable_material(c("striped", "hover")) %>%
+  kable_styling(fixed_thead = T)
+```
+### Ratings distribution
+
+```{r, question5}
+genre_ratings <- movies_cleaned %>%
+  group_by(genre) %>%
+  summarize(Minimum_Rating = min(rating), Max_Rating = max(rating), 
+            Mean_Rating = mean(rating), Median_Rating = median(rating), 
+            st_dev=STDEV(rating))
+genre_ratings %>%
+  kbl(col.names = gsub("[_]", " ", names(genre_ratings))) %>%
+  kable_material(c("striped", "hover")) %>%
+  kable_styling(fixed_thead = T)
+
+ggplot(movies, aes(x = rating, group = genre)) +
+  geom_density(alpha = 0.4, show.legend = F, fill = 'lightblue') +
+  labs(title = "Density distribution of ratings by genre", x = "Rating", y = "Density") +
+  facet_wrap(~genre) +
+  theme_clean()
+ 
+  
+```
+It is interesting to notice that while horror  movies were the most profitable ones, they are also the most disliked movies (after the thriller movie which represents an unsignificant sample). Conversely, Biography movies are the most liked ones and are also very profitable. Perhaps movies are a great source of inspiration, and while there is no dearth of good fictional movies, what really inspires people are biographies.
+
+## Graphical descriptive analysis based on `ggplot`
+  
+
+```{r, gross_on_fblikes}
+ggplot(movies, aes(x = cast_facebook_likes, y = gross)) +
+  labs(title= "Relationship between facebook likes and \ngross sales of a movie", x = "# Likes", y = "Gross ($)") +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_continuous(labels = scales::comma) +
+  theme_clean()
+
+#Correlation coefficient
+movies %>%
+  summarize(correlation = cor(cast_facebook_likes,gross)^2)
+
+```
+There is no direct relationship between the number of facebook likes and the gross sales of a movie which may likely be due to the fact that movies are not primarily promoted though individual facebook pages. The R squared is 0.0454, indicating no significant correlation between the two variables. 
+
+
+```{r, gross_on_budget}
+ggplot(movies, aes(x = budget, y = gross)) +
+  labs(title= "Relationship between budget and gross sales of a movie", x = "Budget ($)", y = "Gross ($)") +
+  geom_point() + 
+  geom_smooth() +
+  scale_y_continuous(labels = scales::dollar) +
+  scale_x_continuous(labels = scales::dollar) +
+  theme_clean()
+
+
+#Correlation coefficient
+movies %>%
+  summarize(correlation = cor(budget,gross)^2)
+
+```
