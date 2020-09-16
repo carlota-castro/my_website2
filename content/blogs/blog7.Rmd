@@ -8,7 +8,7 @@ draft: false
 image: Trump.jpg
 keywords: ""
 slug: blog7
-title: How has Trump approval rate varied?
+title: How has Trump approval rate varied in time?
 ---
 
 ```{r, setup, include=FALSE}
@@ -49,21 +49,29 @@ For our analysis of president Trump's approval, firstly we need to load the data
 
 # Import approval polls data
 approval_polllist <- vroom::vroom(file = 'data/approval_polllist.csv')
-#Take a look at the data
+# Take a look at the data
 glimpse(approval_polllist)
-#Use lubridate to fix the dates as they are given as characters
+
+# Use lubridate to fix the dates employing command mdy(), which indicates that order is month day year,
+#convert the dates from "character" to "date" type
+
+# Convert modeldate
 approval_polllist$modeldate<-mdy(approval_polllist$modeldate)
+# Convert startdate
 approval_polllist$startdate<-mdy(approval_polllist$startdate)
+#Convert enddate
 approval_polllist$enddate<-mdy(approval_polllist$enddate)
+#Convert createddate
 approval_polllist$createddate<-mdy(approval_polllist$createddate)
 ```
-## Graphical visualization
 
-We will calculate the average net approval rate (approve-disapprove) for each week since Trump got into office, and plot the net approval along with the 95% confidence intervals.
+## Graphical visualization
+We will calculate the average net approval rate (approve-disapprove percentages) for each week since Trump got into office, and plot the net approval along with the 95% confidence intervals.
 
 ```{R Trump,fig.height=5,fig.width=10}
+
 Trump_approval<-approval_polllist%>%
-  #Filter to select the voters only from the subgroup list
+  #Filter to select only Voters from subgrou
 filter(subgroup=="Voters")%>%
   #Create the relevant variables: get the week and year from the enddate, and create plotting variable "net approval"
   mutate(date=enddate,week=week(date),year=year(date),net_approval=approve-disapprove)%>%
@@ -81,6 +89,7 @@ ggplot(Trump_approval,aes(x=week,fill=as.factor(year)))+scale_fill_manual(values
   geom_ribbon(aes(ymin=lower_bound,ymax=upper_bound),alpha=0.3)+facet_wrap(~year)+
   #Create a horizontal line at y=0
   geom_hline(yintercept=0, size=1.5, color="orange")+
+  #Customize the code, adding titles, legends
   labs(title="Estimating Net Approval (approve-disapprove) for Donald Trump
 ",subtitle="Weekly average of all polls",x="Week of the year",y="Average Net Approval (%)")+
   
@@ -92,12 +101,15 @@ ggplot(Trump_approval,aes(x=week,fill=as.factor(year)))+scale_fill_manual(values
                                 colour = "grey"), 
   panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
                                 colour = "grey")) + 
+  #Specify the limits and breaks for the scales
   scale_y_continuous(breaks=c(-20,-17.5,-15,-12.5,-10,-7.5,-5,-2.5,0,2.5,5.0,7.5))+
   scale_x_continuous(breaks=c(0, 13,26,39,52))
 
 ```
-For the sake of reference, we can compare our plots to the ones below and observe that the values and trends match.
+## Analysing Trump's approval rate throughout his time in office
+By looking at Trump's approval rate throughout the years, we can observe his net approval rate has remained negative from his second week on the office. The most significant periods of decline happened in mid 2017 (year in which he started his time as a president) and in year 2020. It is interesting to notice that in year 2020, this decline is coincident with the pandemic peak weeks. In 2018 and 2019, the approval rate remained stable (i.e. no significant declines or increases).
 
-## Comparing confidence intervals?
+
+## Comparing confidence intervals in 2020
 
 If we compare the confidence intervals for `week 15` (6-12 April 2020) and `week 34` (17-23 August 2020), we can observe that the confidence interval for the second week is wider. The confidence interval is a function of the level of confidence, the standard deviation/variability and the sample size. Since the level of confidence is kept constant at 95%, we can collude that either the variability has increased and/or the sample size has diminished (i.e. less polls were conducted). By analyzing the numerical data, we can confirm that in week 34 the standard deviation increased by 64.7% and the sample size decreased by 11%.

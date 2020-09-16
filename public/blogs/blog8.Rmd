@@ -89,7 +89,6 @@ ggplot(head(top_beer, 25), aes(x=reorder(country, beer_servings), y = beer_servi
   #Customize the theme
   theme_clean()
 ```
-The top 5 beer consuming countries are: Namibia, Czech Republic, Gabon, Germany and Poland.
 
 ## Top 25 wine consuming countries
 

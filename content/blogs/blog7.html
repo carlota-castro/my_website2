@@ -8,7 +8,7 @@ draft: false
 image: Trump.jpg
 keywords: ""
 slug: blog7
-title: How has Trump approval rate varied?
+title: How has Trump approval rate varied in time?
 ---
 
 
@@ -18,7 +18,7 @@ title: How has Trump approval rate varied?
 <p>For our analysis of president Trump’s approval, firstly we need to load the data!</p>
 <pre class="r"><code># Import approval polls data
 approval_polllist &lt;- vroom::vroom(file = &#39;data/approval_polllist.csv&#39;)
-#Take a look at the data
+# Take a look at the data
 glimpse(approval_polllist)</code></pre>
 <pre><code>## Rows: 14,533
 ## Columns: 22
@@ -44,16 +44,22 @@ glimpse(approval_polllist)</code></pre>
 ## $ question_id         &lt;dbl&gt; 77265, 77261, 77599, 77274, 77248, 77278, 77598, …
 ## $ createddate         &lt;chr&gt; &quot;1/23/2017&quot;, &quot;1/23/2017&quot;, &quot;3/1/2017&quot;, &quot;1/24/2017&quot;…
 ## $ timestamp           &lt;chr&gt; &quot;13:38:37 29 Aug 2020&quot;, &quot;13:38:37 29 Aug 2020&quot;, &quot;…</code></pre>
-<pre class="r"><code>#Use lubridate to fix the dates as they are given as characters
+<pre class="r"><code># Use lubridate to fix the dates employing command mdy(), which indicates that order is month day year,
+#convert the dates from &quot;character&quot; to &quot;date&quot; type
+
+# Convert modeldate
 approval_polllist$modeldate&lt;-mdy(approval_polllist$modeldate)
+# Convert startdate
 approval_polllist$startdate&lt;-mdy(approval_polllist$startdate)
+#Convert enddate
 approval_polllist$enddate&lt;-mdy(approval_polllist$enddate)
+#Convert createddate
 approval_polllist$createddate&lt;-mdy(approval_polllist$createddate)</code></pre>
 <div id="graphical-visualization" class="section level2">
 <h2>Graphical visualization</h2>
-<p>We will calculate the average net approval rate (approve-disapprove) for each week since Trump got into office, and plot the net approval along with the 95% confidence intervals.</p>
+<p>We will calculate the average net approval rate (approve-disapprove percentages) for each week since Trump got into office, and plot the net approval along with the 95% confidence intervals.</p>
 <pre class="r"><code>Trump_approval&lt;-approval_polllist%&gt;%
-  #Filter to select the voters only from the subgroup list
+  #Filter to select only Voters from subgrou
 filter(subgroup==&quot;Voters&quot;)%&gt;%
   #Create the relevant variables: get the week and year from the enddate, and create plotting variable &quot;net approval&quot;
   mutate(date=enddate,week=week(date),year=year(date),net_approval=approve-disapprove)%&gt;%
@@ -71,6 +77,7 @@ ggplot(Trump_approval,aes(x=week,fill=as.factor(year)))+scale_fill_manual(values
   geom_ribbon(aes(ymin=lower_bound,ymax=upper_bound),alpha=0.3)+facet_wrap(~year)+
   #Create a horizontal line at y=0
   geom_hline(yintercept=0, size=1.5, color=&quot;orange&quot;)+
+  #Customize the code, adding titles, legends
   labs(title=&quot;Estimating Net Approval (approve-disapprove) for Donald Trump
 &quot;,subtitle=&quot;Weekly average of all polls&quot;,x=&quot;Week of the year&quot;,y=&quot;Average Net Approval (%)&quot;)+
   
@@ -82,13 +89,15 @@ ggplot(Trump_approval,aes(x=week,fill=as.factor(year)))+scale_fill_manual(values
                                 colour = &quot;grey&quot;), 
   panel.grid.minor = element_line(size = 0.25, linetype = &#39;solid&#39;,
                                 colour = &quot;grey&quot;)) + 
+  #Specify the limits and breaks for the scales
   scale_y_continuous(breaks=c(-20,-17.5,-15,-12.5,-10,-7.5,-5,-2.5,0,2.5,5.0,7.5))+
   scale_x_continuous(breaks=c(0, 13,26,39,52))</code></pre>
 <p><img src="/blogs/blog7_files/figure-html/Trump-1.png" width="960" style="display: block; margin: auto;" />
-For the sake of reference, we can compare our plots to the ones below and observe that the values and trends match.</p>
+## Analysing Trump’s approval rate throughout his time in office
+By looking at Trump’s approval rate throughout the years, we can observe his net approval rate has remained negative from his second week on the office. The most significant periods of decline happened in mid 2017 (year in which he started his time as a president) and in year 2020. It is interesting to notice that in year 2020, this decline is coincident with the pandemic peak weeks. In 2018 and 2019, the approval rate remained stable (i.e. no significant declines or increases).</p>
 </div>
-<div id="comparing-confidence-intervals" class="section level2">
-<h2>Comparing confidence intervals?</h2>
+<div id="comparing-confidence-intervals-in-2020" class="section level2">
+<h2>Comparing confidence intervals in 2020</h2>
 <p>If we compare the confidence intervals for <code>week 15</code> (6-12 April 2020) and <code>week 34</code> (17-23 August 2020), we can observe that the confidence interval for the second week is wider. The confidence interval is a function of the level of confidence, the standard deviation/variability and the sample size. Since the level of confidence is kept constant at 95%, we can collude that either the variability has increased and/or the sample size has diminished (i.e. less polls were conducted). By analyzing the numerical data, we can confirm that in week 34 the standard deviation increased by 64.7% and the sample size decreased by 11%.</p>
 </div>
 </div>
