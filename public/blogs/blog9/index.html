@@ -102,175 +102,192 @@
 <h2>Data exploration of the movies dataset</h2>
 <div id="data-structure" class="section level3">
 <h3>Data structure</h3>
-<p>There are no missing values (NAs) in the dataset. Equally, there are no duplicate rows (= identical for each column) but there is a total of <strong>54</strong> duplicate rows based on titles, director, year and movie duration. The duplicates differ on the number of votes and thus the rating. For the following analysis we removed the the duplicate rows and chose a random value for the movie rating.</p>
+<p>There are no missing values (NAs) in the dataset. Equally, there are no duplicate rows (= identical for each column) but there is a total of <strong>54</strong> duplicate rows based on titles, director, year and movie duration. The duplicates differ on the number of votes and thus the rating. For the following analysis, we removed the duplicate rows and chose a random value for the movie rating.</p>
 <pre class="r"><code># Checking for missing values
 anyNA(movies)</code></pre>
 <pre><code>## [1] FALSE</code></pre>
 <pre class="r"><code># Checking if there are duplicates based on title, director, year, duration
+
 dupes &lt;- movies %&gt;%
+  #Select the variables tile, director, year and duration from the dataset
   select(title, director, year, duration) %&gt;%
+  # Check for duplicates with function duplicated()
   duplicated()
 
 table(dupes)[&quot;TRUE&quot;]</code></pre>
 <pre><code>## TRUE 
 ##   54</code></pre>
-<pre class="r"><code>movies_cleaned &lt;- movies[!dupes,]</code></pre>
+<pre class="r"><code># Create the variable movies cleaned that contains the movies without duplicates 
+movies_cleaned &lt;- movies[!dupes,]</code></pre>
 </div>
 <div id="movies-per-genre" class="section level3">
 <h3>Movies per genre</h3>
-<pre class="r"><code>movies_by_genre &lt;- movies_cleaned %&gt;%
+<p>We want to determine how many movies there are per genre. Hence, we will create a table with two columns: genre and movie count.</p>
+<pre class="r"><code># Create a variable movies per genre from movies_cleaned
+movies_by_genre &lt;- movies_cleaned %&gt;%
+   #group by genre
   group_by(genre) %&gt;%
+  #Count the number of movies by each genre and sort in 
+  #descending order
   count(sort = TRUE)
+#movies_by_genre
+
+# Create a table with the columns corresponding to Genre and Movie Count employing the library kableExtra
 
 movies_by_genre %&gt;%
+  #Define the names of the columns 
   kbl(col.names = c(&quot;Genre&quot;, &quot;Movie count&quot;)) %&gt;%
-  kable_material(c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
-  kable_styling(fixed_thead = T)</code></pre>
-<table class=" lightable-material lightable-striped lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
+  #Choose the theme for the table
+  kable_material(c(&quot;hover&quot;)) %&gt;%
+  #Fix the table header at the top = false
+  kable_styling(fixed_thead = F)%&gt;%
+  #Specify the background color for the relevant columns
+  column_spec(1:2, background = &quot;blue&quot;)</code></pre>
+<table class=" lightable-material lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
 <thead>
 <tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 Genre
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 Movie count
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Comedy
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 844
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Action
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 719
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Drama
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 484
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Adventure
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 281
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Crime
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 198
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Biography
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 135
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Horror
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 128
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Animation
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 35
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Fantasy
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 26
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Documentary
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 25
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Mystery
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 15
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Sci-Fi
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 7
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Family
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 3
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Musical
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 2
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Romance
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 2
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Western
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 2
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Thriller
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1
 </td>
 </tr>
@@ -279,270 +296,283 @@ Thriller
 </div>
 <div id="financial-performance" class="section level3">
 <h3>Financial performance</h3>
-<pre class="r"><code>genre_gross_budget &lt;- movies_cleaned %&gt;%
+<p>The aim of this section is to determine the financial performance of the movies. We will determine, firstly, the mean gross; secondly, the mean budget; thirdly, the mean return, defined as gross earning/gross budget (i.e. how many dollars $ a movie made at the box office for each $ of its budget). All the values are given in millions of dollars.</p>
+<pre class="r"><code># Analyze financial performance of the movies
+genre_gross_budget &lt;- movies_cleaned %&gt;%
+  # Create variable return_on_budget = gross/budget
   mutate(return_on_budget = gross/budget) %&gt;%
+  # Group the movies by genre
   group_by(genre) %&gt;%
+  # Calculate the mean gross, mean budget (dividing them by 1,000,000 to get the result
+  # in million dollars), and mean return
   summarize(mean_gross = mean(gross)/1000000, mean_budget = mean(budget)/1000000, 
             mean_return = mean(return_on_budget)) %&gt;%
+  #Arrange by return in descending order
   arrange(desc(mean_return))
 
+#Give genre_gross_budget as an input to the table. Note, need to use package kableExtra
 genre_gross_budget %&gt;% 
- kbl(col.names = c(&quot;Genre&quot;, &quot;Mean Gross (mm)&quot;, &quot;Mean Budget (mm)&quot;, &quot;Mean Return&quot;), digits = 2) %&gt;%
-  kable_material(c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
-  kable_styling(fixed_thead = T)</code></pre>
-<table class=" lightable-material lightable-striped lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
+  #Define the names of the columns  
+ kbl(col.names = c(&quot;Genre&quot;, &quot;Mean Gross&quot;, &quot;Mean Budget&quot;, &quot;Mean Return&quot;), digits = 2) %&gt;%
+  #Choose the theme for the table 
+  kable_material(c(&quot;hover&quot;)) %&gt;%
+  #Fix the table header at the top = False
+  kable_styling(fixed_thead = F)%&gt;%
+  #Specify the background color for the relevant columns
+  column_spec(1:4, background = &quot;blue&quot;)</code></pre>
+<table class=" lightable-material lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
 <thead>
 <tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 Genre
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-Mean Gross (mm)
+<th style="text-align:right;">
+Mean Gross
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-Mean Budget (mm)
+<th style="text-align:right;">
+Mean Budget
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 Mean Return
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Horror
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 37.8
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 13.80
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 86.15
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Biography
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 45.2
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 28.54
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 22.28
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Musical
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 92.1
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 3.19
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 18.82
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Family
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 149.2
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 14.83
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 14.08
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Documentary
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 17.4
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 5.89
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 8.70
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Western
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 20.8
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 3.46
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 7.06
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Fantasy
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 41.9
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 18.48
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 6.10
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Animation
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 98.4
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 61.70
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 5.01
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Comedy
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 42.5
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 24.46
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 3.70
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Romance
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 31.3
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 25.11
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 3.17
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Drama
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 36.8
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 25.83
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 2.98
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Mystery
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 69.1
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 41.50
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 2.90
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Adventure
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 94.3
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 64.69
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 2.44
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Crime
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 37.6
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 26.53
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 2.19
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Action
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 86.3
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 70.77
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1.93
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Sci-Fi
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 29.8
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 27.61
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1.58
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;background-color: blue !important;">
 Thriller
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 0.0
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 0.30
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 0.01
 </td>
 </tr>
@@ -552,290 +582,299 @@ Thriller
 </div>
 <div id="top-directors" class="section level3">
 <h3>Top directors</h3>
-<pre class="r"><code>top_directors &lt;- movies_cleaned %&gt;%
+<p>After determining the number of movies per genre, and the financial performance, we want to understand the directors behind the films.</p>
+<pre class="r"><code>#Create dataframe top directors
+top_directors &lt;- movies_cleaned %&gt;%
+  #Group by director
   group_by(director) %&gt;%
+  #Summarize tje total gross and mean gross, median, std deviation in millions of dollars.
   summarize(total = sum(gross)/1000000, mean = mean(gross)/1000000,
             median = median(gross)/1000000, st_dev=STDEV(gross)) %&gt;%
+  #Arrange in descencing order
   arrange(desc(total)) %&gt;%
+  #Choose the top 15 values
   head(15)
 
 top_directors %&gt;%
-  kbl(col.names = c(&quot;Director&quot;, &quot;Total Revenue (mm)&quot;, &quot;Mean Revenue (mm)&quot;, &quot;Median Revenue (mm)&quot;, &quot;SD of Revenue (mm)&quot;)) %&gt;%
-  kable_material(c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
-  kable_styling(fixed_thead = T)</code></pre>
-<table class=" lightable-material lightable-striped lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
+  #Create table 
+  kbl(col.names = c(&quot;Director&quot;, &quot;Total Revenue&quot;, &quot;Mean Revenue&quot;, &quot;Median Revenue&quot;, &quot;SD of Revenue&quot;)) %&gt;%
+  kable_material(c(&quot;hover&quot;)) %&gt;%
+  kable_styling(fixed_thead = F)%&gt;%
+  column_spec(1, bold = T, border_right = F) %&gt;%
+  column_spec(1:5, background = &quot;blue&quot;)</code></pre>
+<table class=" lightable-material lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
 <thead>
 <tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 Director
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-Total Revenue (mm)
+<th style="text-align:right;">
+Total Revenue
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-Mean Revenue (mm)
+<th style="text-align:right;">
+Mean Revenue
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-Median Revenue (mm)
+<th style="text-align:right;">
+Median Revenue
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-SD of Revenue (mm)
+<th style="text-align:right;">
+SD of Revenue
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Steven Spielberg
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 4014
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 174.5
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 164.4
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1.01e+08
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Michael Bay
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 2195
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 183.0
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 168.5
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1.26e+08
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 James Cameron
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1910
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 318.3
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 175.6
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 3.09e+08
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Christopher Nolan
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1813
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 226.7
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 196.7
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1.87e+08
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 George Lucas
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1741
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 348.3
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 380.3
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1.46e+08
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Robert Zemeckis
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1619
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 124.6
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 100.9
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 9.13e+07
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Tim Burton
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1557
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 111.2
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 69.8
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 9.93e+07
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Sam Raimi
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1443
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 180.4
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 138.5
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1.75e+08
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Clint Eastwood
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1378
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 72.5
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 46.7
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 7.55e+07
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Francis Lawrence
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1359
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 271.7
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 281.7
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1.35e+08
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Ron Howard
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1336
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 111.3
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 101.6
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 8.19e+07
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Gore Verbinski
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1330
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 189.9
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 123.2
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1.54e+08
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Andrew Adamson
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1137
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 284.4
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 279.7
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1.21e+08
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Shawn Levy
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1130
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 102.7
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 85.5
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 6.55e+07
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;font-weight: bold;background-color: blue !important;">
 Ridley Scott
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 1129
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 80.6
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 47.8
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;background-color: blue !important;">
 6.88e+07
 </td>
 </tr>
@@ -844,400 +883,46 @@ Ridley Scott
 </div>
 <div id="ratings-distribution" class="section level3">
 <h3>Ratings distribution</h3>
-<pre class="r"><code>genre_ratings &lt;- movies_cleaned %&gt;%
+<p>The next question we want to analyse is: how are the ratings of the movies grouped by gender distributed? Are some genres generally more highly rated than others?</p>
+<pre class="r"><code>#Create data.frame genre_ratings
+genre_ratings &lt;- movies_cleaned %&gt;%
+  #Group by genre
   group_by(genre) %&gt;%
+  #Calculate some statistical variables: minimum, maximum, mean,median, standard deviation of the ratings.
   summarize(Minimum_Rating = min(rating), Max_Rating = max(rating), 
             Mean_Rating = mean(rating), Median_Rating = median(rating), 
             st_dev=STDEV(rating))
-genre_ratings %&gt;%
-  kbl(col.names = gsub(&quot;[_]&quot;, &quot; &quot;, names(genre_ratings))) %&gt;%
-  kable_material(c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
-  kable_styling(fixed_thead = T)</code></pre>
-<table class=" lightable-material lightable-striped lightable-hover table" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;'>
-<thead>
-<tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-genre
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-Minimum Rating
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-Max Rating
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-Mean Rating
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-Median Rating
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-st dev
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Action
-</td>
-<td style="text-align:right;">
-2.1
-</td>
-<td style="text-align:right;">
-9.0
-</td>
-<td style="text-align:right;">
-6.23
-</td>
-<td style="text-align:right;">
-6.30
-</td>
-<td style="text-align:right;">
-1.039
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Adventure
-</td>
-<td style="text-align:right;">
-2.3
-</td>
-<td style="text-align:right;">
-8.6
-</td>
-<td style="text-align:right;">
-6.51
-</td>
-<td style="text-align:right;">
-6.60
-</td>
-<td style="text-align:right;">
-1.106
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Animation
-</td>
-<td style="text-align:right;">
-4.5
-</td>
-<td style="text-align:right;">
-8.0
-</td>
-<td style="text-align:right;">
-6.65
-</td>
-<td style="text-align:right;">
-6.90
-</td>
-<td style="text-align:right;">
-0.968
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Biography
-</td>
-<td style="text-align:right;">
-4.5
-</td>
-<td style="text-align:right;">
-8.9
-</td>
-<td style="text-align:right;">
-7.11
-</td>
-<td style="text-align:right;">
-7.20
-</td>
-<td style="text-align:right;">
-0.760
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Comedy
-</td>
-<td style="text-align:right;">
-1.9
-</td>
-<td style="text-align:right;">
-8.8
-</td>
-<td style="text-align:right;">
-6.11
-</td>
-<td style="text-align:right;">
-6.20
-</td>
-<td style="text-align:right;">
-1.024
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Crime
-</td>
-<td style="text-align:right;">
-4.8
-</td>
-<td style="text-align:right;">
-9.3
-</td>
-<td style="text-align:right;">
-6.92
-</td>
-<td style="text-align:right;">
-6.90
-</td>
-<td style="text-align:right;">
-0.853
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Documentary
-</td>
-<td style="text-align:right;">
-1.6
-</td>
-<td style="text-align:right;">
-8.5
-</td>
-<td style="text-align:right;">
-6.66
-</td>
-<td style="text-align:right;">
-7.40
-</td>
-<td style="text-align:right;">
-1.767
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Drama
-</td>
-<td style="text-align:right;">
-2.1
-</td>
-<td style="text-align:right;">
-8.8
-</td>
-<td style="text-align:right;">
-6.74
-</td>
-<td style="text-align:right;">
-6.80
-</td>
-<td style="text-align:right;">
-0.915
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Family
-</td>
-<td style="text-align:right;">
-5.7
-</td>
-<td style="text-align:right;">
-7.9
-</td>
-<td style="text-align:right;">
-6.50
-</td>
-<td style="text-align:right;">
-5.90
-</td>
-<td style="text-align:right;">
-1.217
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Fantasy
-</td>
-<td style="text-align:right;">
-4.3
-</td>
-<td style="text-align:right;">
-7.9
-</td>
-<td style="text-align:right;">
-6.08
-</td>
-<td style="text-align:right;">
-6.20
-</td>
-<td style="text-align:right;">
-0.953
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Horror
-</td>
-<td style="text-align:right;">
-3.6
-</td>
-<td style="text-align:right;">
-8.5
-</td>
-<td style="text-align:right;">
-5.79
-</td>
-<td style="text-align:right;">
-5.85
-</td>
-<td style="text-align:right;">
-0.987
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Musical
-</td>
-<td style="text-align:right;">
-6.3
-</td>
-<td style="text-align:right;">
-7.2
-</td>
-<td style="text-align:right;">
-6.75
-</td>
-<td style="text-align:right;">
-6.75
-</td>
-<td style="text-align:right;">
-0.636
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mystery
-</td>
-<td style="text-align:right;">
-4.6
-</td>
-<td style="text-align:right;">
-8.5
-</td>
-<td style="text-align:right;">
-6.84
-</td>
-<td style="text-align:right;">
-6.70
-</td>
-<td style="text-align:right;">
-0.910
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Romance
-</td>
-<td style="text-align:right;">
-6.2
-</td>
-<td style="text-align:right;">
-7.1
-</td>
-<td style="text-align:right;">
-6.65
-</td>
-<td style="text-align:right;">
-6.65
-</td>
-<td style="text-align:right;">
-0.636
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Sci-Fi
-</td>
-<td style="text-align:right;">
-5.0
-</td>
-<td style="text-align:right;">
-8.2
-</td>
-<td style="text-align:right;">
-6.66
-</td>
-<td style="text-align:right;">
-6.40
-</td>
-<td style="text-align:right;">
-1.094
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Thriller
-</td>
-<td style="text-align:right;">
-4.8
-</td>
-<td style="text-align:right;">
-4.8
-</td>
-<td style="text-align:right;">
-4.80
-</td>
-<td style="text-align:right;">
-4.80
-</td>
-<td style="text-align:right;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Western
-</td>
-<td style="text-align:right;">
-4.1
-</td>
-<td style="text-align:right;">
-7.3
-</td>
-<td style="text-align:right;">
-5.70
-</td>
-<td style="text-align:right;">
-5.70
-</td>
-<td style="text-align:right;">
-2.263
-</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code>ggplot(movies, aes(x = rating, group = genre)) +
+
+#Create density plots for each of the genders
+ggplot(movies, aes(x = rating, group = genre)) +
   geom_density(alpha = 0.4, show.legend = F, fill = &#39;lightblue&#39;) +
+  #Add the title, x and y labels
   labs(title = &quot;Density distribution of ratings by genre&quot;, x = &quot;Rating&quot;, y = &quot;Density&quot;) +
+  #Wrap by genre 
   facet_wrap(~genre) +
+  #Choose the theme for the plots
   theme_clean()</code></pre>
 <p><img src="/blogs/blog9_files/figure-html/question5-1.png" width="648" style="display: block; margin: auto;" />
 It is interesting to notice that while horror movies were the most profitable ones, they are also the most disliked movies (after the thriller movie which represents an unsignificant sample). Conversely, Biography movies are the most liked ones and are also very profitable. Perhaps movies are a great source of inspiration, and while there is no dearth of good fictional movies, what really inspires people are biographies.</p>
 </div>
 </div>
-<div id="graphical-descriptive-analysis-based-on-ggplot" class="section level2">
-<h2>Graphical descriptive analysis based on <code>ggplot</code></h2>
-<pre class="r"><code>ggplot(movies, aes(x = cast_facebook_likes, y = gross)) +
+<div id="facebook-likes-and-gross-sales-of-a-movie" class="section level2">
+<h2>Facebook likes and gross sales of a movie?</h2>
+<p>Further to the analyses conducted so far, we want to further understand if the number of Facebook likes on a social media affects gross sales of a movie. Does having more facebook likes lead to a greater number of sales of a movie? Let’s see!</p>
+<pre class="r"><code>#Create a scatter plot having the number of facebook likes on the x axis and gross on the y-axis.
+ggplot(movies, aes(x = cast_facebook_likes, y = gross)) +
+  #Specify the title, the x-label and the y-label
   labs(title= &quot;Relationship between facebook likes and \ngross sales of a movie&quot;, x = &quot;# Likes&quot;, y = &quot;Gross ($)&quot;) +
+  #Indicate type of plot
   geom_point() +
+  #Determine the format: if scales::comma, the scientific format is replaced
+  #by a number with all the zeros
   scale_y_continuous(labels = scales::comma) +
   scale_x_continuous(labels = scales::comma) +
+  #Choose the theme
   theme_clean()</code></pre>
 <p><img src="/blogs/blog9_files/figure-html/gross_on_fblikes-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#Correlation coefficient
+<pre class="r"><code>#Calculate the correlation coefficient using function cor()
 movies %&gt;%
   summarize(correlation = cor(cast_facebook_likes,gross)^2)</code></pre>
 <pre><code>## # A tibble: 1 x 1
@@ -1245,16 +930,23 @@ movies %&gt;%
 ##         &lt;dbl&gt;
 ## 1      0.0454</code></pre>
 <p>There is no direct relationship between the number of facebook likes and the gross sales of a movie which may likely be due to the fact that movies are not primarily promoted though individual facebook pages. The R squared is 0.0454, indicating no significant correlation between the two variables.</p>
+<p>A final question we aim to answer to conclude our analysis of this set of movies is: does a higher budget lead to a higher gross?</p>
 <pre class="r"><code>ggplot(movies, aes(x = budget, y = gross)) +
+  #Add the title, x and y labels
   labs(title= &quot;Relationship between budget and gross sales of a movie&quot;, x = &quot;Budget ($)&quot;, y = &quot;Gross ($)&quot;) +
+  #Specify the type of plot
   geom_point() + 
+  #Add a linear regression trendline
   geom_smooth() +
+  #Add the dollar sign next to the number in the axes
   scale_y_continuous(labels = scales::dollar) +
   scale_x_continuous(labels = scales::dollar) +
+  #Add the theme
   theme_clean()</code></pre>
 <p><img src="/blogs/blog9_files/figure-html/gross_on_budget-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>#Correlation coefficient
 movies %&gt;%
+  #Calculate the correlation number using cor
   summarize(correlation = cor(budget,gross)^2)</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##   correlation
