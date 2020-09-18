@@ -91,6 +91,18 @@ disqusShortname = ""
     enable = true
     # Display your showcases here.
     
+     [[params.tiles.showcase]]
+      title = "Salaries according to gender"
+      subtitle = "Are men and women's salaries equal?"
+      image = "salaries.jpg"
+      url = "blogs/blog6"
+      
+       [[params.tiles.showcase]]
+      title = "Trump's popularity"
+      subtitle = "How has the approval rate varied throughout his time in office?"
+      image = "Trump.jpg"
+      url = "blogs/blog7"
+      
     [[params.tiles.showcase]]
       title = "Alcoholic consumption per country"
       subtitle = "Where Do People Drink The Most Beer, Wine And Spirits?"
@@ -98,35 +110,10 @@ disqusShortname = ""
       url = "blogs/blog8"
 
     [[params.tiles.showcase]]
-      title = "Salaries according to gender"
-      subtitle = "Are men and women's salaries equal?"
-      image = "salaries.jpg"
-      url = "blogs/blog6"
-
-    [[params.tiles.showcase]]
-      title = "Trump's popularity"
-      subtitle = "How has the approval rate varied throughout his time in office?"
-      image = "Trump.jpg"
-      url = "blogs/blog7"
-
-    [[params.tiles.showcase]]
       title = "Movies analysis"
       subtitle = "Several facts to discover about movies"
       image = "movies_image.jpg"
       url = "blogs/blog9"
-
-    #[[params.tiles.showcase]]
-      #title = "Consequat"
-      #subtitle = "Ipsum Dolor Sit Amet"
-      #image = "pic05.jpg"
-      #url = "blogs/ipsum"
-
-    #[[params.tiles.showcase]]
-      #title = "Etiam"
-      #subtitle = "Feugiat Amet Tempus"
-      #image = "pic06.jpg"
-      #url = "blogs/ipsum"
-    # You can make more showcases by copy and pasting the code above
 
   [params.blog]
     # All blogs defined in their own files. You can find example blogs
@@ -138,12 +125,10 @@ disqusShortname = ""
   # Section Type Two
   [params.two]
     enable = true
-    title = "Massa libero"
-    subtitle = """Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. 
-    Mauris aliquet magna magna sed nunc rhoncus pharetra. 
-    Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. 
-    Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero.
-    Mauris aliquet magna magna sed nunc rhoncus amet pharetra et feugiat tempus."""
+    title = "Interesting data analysis projects"
+    subtitle = """Applied R statistics. This website was created 
+    to present interesting findings from data science projects.
+   """
     buttonText = "Get Started"
     url = "blogs"
 
