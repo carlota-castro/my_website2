@@ -52,8 +52,6 @@
             
                 <li><a href="/">Home</a></li>
             
-                <li><a href="/blogs">Blogs</a></li>
-            
 
         </ul>
         <ul class="actions vertical">
@@ -81,7 +79,9 @@
 
 <div id="trumps-approval-margins" class="section level1">
 <h1>Trump’s Approval Margins</h1>
-<p>For our analysis of president Trump’s approval, firstly we need to load the data!</p>
+<p>Our team has been tasked with the analysis of the net approval rate (i.e. approve- disapprove percentages) for the US president Donald Trump throughout his time in office. Does he have a positive or negative approval rate? Have there been any significants increases or decreases in his net approval rate during his time in the White House?
+To answer these questions, we will look at data on all polls that track the president’s approval obtained from fivethirtyeight.com (<a href="https://projects.fivethirtyeight.com/trump-approval-ratings" class="uri">https://projects.fivethirtyeight.com/trump-approval-ratings</a>).</p>
+<p>To start analysis, firstly we need to load the data!</p>
 <pre class="r"><code># Import approval polls data
 approval_polllist &lt;- vroom::vroom(file = &#39;data/approval_polllist.csv&#39;)
 # Take a look at the data

@@ -43,7 +43,10 @@ library(vroom)
 
 # Trump's Approval Margins
 
-For our analysis of president Trump's approval, firstly we need to load the data! 
+Our team has been tasked with the analysis of the net approval rate (i.e. approve- disapprove percentages) for the US president Donald Trump throughout his time in office. Does he have a positive or negative approval rate? Have there been any significants increases or decreases in his net approval rate during his time in the White House?
+To answer these questions, we will look at data on all polls that track the president's approval obtained from fivethirtyeight.com (https://projects.fivethirtyeight.com/trump-approval-ratings).
+
+To start analysis, firstly we need to load the data! 
 
 ```{r, cache=TRUE}
 

@@ -3,7 +3,7 @@ categories:
 - ""
 - ""
 date: "2020-09-15"
-description: Consumption of wine,spirits and beer
+description: Where Do People Drink The Most Beer, Wine And Spirits?
 draft: false
 image: Flags.jpg
 keywords: ""
@@ -45,24 +45,30 @@ library(kableExtra)
 
 # Where Do People Drink The Most Beer, Wine And Spirits?
 
-Back in 2014, [fivethiryeight.com](https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/) published an article on alcohol consumption in different countries.
+Our team has been tasked with the analysis of alcoholic beverages consumption per country. Our clients want to know how is the beer, wine and spirits consumption per country.
+Back in 2014, [fivethiryeight.com](https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/) published an article on alcohol consumption in different countries. We used the dataset from fivethirtyeight.com to perform our exploration.
 
 
-```{r, load_alcohol_data, echo=FALSE}
+```{r, load_alcohol_data}
+#The first thing we need to do is loading the relevant datasets!
+
 #Load the library fivethirtyeight
 library(fivethirtyeight)
 #Load the data drinks
 data(drinks)
 
+# Another way to have loaded the alcohol direct would have been the following one:
 # alcohol_direct <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/alcohol-consumption/drinks.csv")
 ```
 
-## Checking data quality for drinks dataset 
+## Checking data quality for drinks dataset
 
-```{r glimpse_skim_data, echo=FALSE}
+After loading the data we need to ensure its quality by checking for duplicates and NAs.
 
+```{r glimpse_skim_data}
 # We need to check whether any of the drinks is duplicated
 anyDuplicated(drinks)
+
 # We need to check whether there are any NA drinks
 anyNA(drinks)
 
@@ -111,6 +117,7 @@ ggplot(head(top_wine, 25), aes(x=reorder(country, wine_servings), y = wine_servi
   theme_clean()
 
 ```
+
 ## Top 25 spirit consuming countries
 
 ```{r spirit_plot}
@@ -122,7 +129,7 @@ top_spirits <- drinks %>%
 # Plot the findings; use head to choose the top 25 spirit consuming countries 
 ggplot(head(top_spirits, 25), aes(x=reorder(country, spirit_servings), y = spirit_servings)) +
    # Customize the plot; add the titles, and the axes labels
-  labs(y = "Servings of Spirits", x = "",title="Grenadians are the greatest spirit consumers! ",subtitle = "Spirit Consumption by Country") +
+  labs(y = "Servings of Spirits", x = "",title="Grenadians are the greatest spirit consumers! ",subtitle = "Spirit Consumption by country") +
   geom_bar(stat='identity', show.legend = FALSE, fill = 'green') + 
    # Flip the coordinates
   coord_flip() +

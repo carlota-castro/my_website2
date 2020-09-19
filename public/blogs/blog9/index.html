@@ -52,8 +52,6 @@
             
                 <li><a href="/">Home</a></li>
             
-                <li><a href="/blogs">Blogs</a></li>
-            
 
         </ul>
         <ul class="actions vertical">
@@ -83,7 +81,8 @@
 
 <div id="analysis-of-movies--imdb-dataset" class="section level1">
 <h1>Analysis of movies- IMDB dataset</h1>
-<p>For the following analysis, we use a subset sample of movies, taken from the <a href="https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset">Kaggle IMDB 5000 movie dataset</a></p>
+<p>Our team has been tasked with an analysis of several factors related to movies. We want to explore, among others, factors on which the financial success of a movie could depend. We will start with a general exploration of the dataset: how many movies belong to each gender category, what is the financial performance of each gender category, and who are the directors. Furthermore, we will delve into ratings distribution and analyse the impact of factors such as Facebook likes and budget on the financial performance of the movie.</p>
+<p>For the subsequent analysis, we use a subset sample of movies, taken from the <a href="https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset">Kaggle IMDB 5000 movie dataset</a></p>
 <p>The dataset consists of the following variable: Besides the obvious variables of <code>title</code>, <code>genre</code>, <code>director</code>, <code>year</code>, and <code>duration</code>, the rest of the variables are as follows:</p>
 <ul>
 <li><code>title</code>: Movie title</li>
@@ -117,7 +116,8 @@ dupes &lt;- movies %&gt;%
 table(dupes)[&quot;TRUE&quot;]</code></pre>
 <pre><code>## TRUE 
 ##   54</code></pre>
-<pre class="r"><code># Create the variable movies cleaned that contains the movies without duplicates 
+<pre class="r"><code># Create the variable movies cleaned that 
+#contains the movies without duplicates 
 movies_cleaned &lt;- movies[!dupes,]</code></pre>
 </div>
 <div id="movies-per-genre" class="section level3">
@@ -582,7 +582,7 @@ Thriller
 </div>
 <div id="top-directors" class="section level3">
 <h3>Top directors</h3>
-<p>After determining the number of movies per genre, and the financial performance, we want to understand the directors behind the films.</p>
+<p>After determining the number of movies per genre, and the financial performance, we want to understand the directors behind the films. We will calculate the total revenue, mean revenue, median revenue and standard deviation of the revenue, (values in millions of dollars) for each director.</p>
 <pre class="r"><code>#Create dataframe top directors
 top_directors &lt;- movies_cleaned %&gt;%
   #Group by director
@@ -597,7 +597,7 @@ top_directors &lt;- movies_cleaned %&gt;%
 
 top_directors %&gt;%
   #Create table 
-  kbl(col.names = c(&quot;Director&quot;, &quot;Total Revenue&quot;, &quot;Mean Revenue&quot;, &quot;Median Revenue&quot;, &quot;SD of Revenue&quot;)) %&gt;%
+  kbl(col.names = c(&quot;Director&quot;, &quot;Total Rev&quot;, &quot;Mean Rev&quot;, &quot;Median Rev&quot;, &quot;SD Rev&quot;)) %&gt;%
   kable_material(c(&quot;hover&quot;)) %&gt;%
   kable_styling(fixed_thead = F)%&gt;%
   column_spec(1, bold = T, border_right = F) %&gt;%
@@ -609,16 +609,16 @@ top_directors %&gt;%
 Director
 </th>
 <th style="text-align:right;">
-Total Revenue
+Total Rev
 </th>
 <th style="text-align:right;">
-Mean Revenue
+Mean Rev
 </th>
 <th style="text-align:right;">
-Median Revenue
+Median Rev
 </th>
 <th style="text-align:right;">
-SD of Revenue
+SD Rev
 </th>
 </tr>
 </thead>
@@ -883,7 +883,7 @@ Ridley Scott
 </div>
 <div id="ratings-distribution" class="section level3">
 <h3>Ratings distribution</h3>
-<p>The next question we want to analyse is: how are the ratings of the movies grouped by gender distributed? Are some genres generally more highly rated than others?</p>
+<p>The next question we want to analyse is: how are the ratings of the movies (grouped by gender) distributed? Are some genres generally more highly rated than others?</p>
 <pre class="r"><code>#Create data.frame genre_ratings
 genre_ratings &lt;- movies_cleaned %&gt;%
   #Group by genre
@@ -908,7 +908,7 @@ It is interesting to notice that while horror movies were the most profitable on
 </div>
 <div id="facebook-likes-and-gross-sales-of-a-movie" class="section level2">
 <h2>Facebook likes and gross sales of a movie?</h2>
-<p>Further to the analyses conducted so far, we want to further understand if the number of Facebook likes on a social media affects gross sales of a movie. Does having more facebook likes lead to a greater number of sales of a movie? Let’s see!</p>
+<p>Further to the analyses conducted so far, we want to understand if the number of Facebook likes on a social media affects gross sales of a movie. Does having more facebook likes lead to a greater number of sales of a movie? Let’s see!</p>
 <pre class="r"><code>#Create a scatter plot having the number of facebook likes on the x axis and gross on the y-axis.
 ggplot(movies, aes(x = cast_facebook_likes, y = gross)) +
   #Specify the title, the x-label and the y-label
@@ -952,6 +952,7 @@ movies %&gt;%
 ##   correlation
 ##         &lt;dbl&gt;
 ## 1       0.411</code></pre>
+<p>A relationship between the movie budget and the gross sales of a movie can be inferred. There is a clear correlation between a higher budget and a resulting higher likelihood for commercial success in terms of gross sales.</p>
 </div>
 </div>
 

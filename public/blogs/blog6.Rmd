@@ -3,7 +3,7 @@ categories:
 - ""
 - ""
 date: "2020-09-07"
-description: Is mask acceptance high in the US? NYT Survey analysis.
+description: Is there salary discrimination based on gender?
 draft: false
 image: salaries.jpg
 keywords: ""
@@ -45,7 +45,7 @@ library(openintro)
 ```
 
 
-# Omega Group plc- Pay Discrimination ??
+# Is there salary discrimation based on gender?
 
 At the last board meeting of Omega Group Plc., the headquarters of a large multinational company, the issue was raised that women were being discriminated in the company, in the sense that the salaries were not the same for male and female executives. A quick analysis of a sample of 50 employees (of which 24 men and 26 women) revealed that the average salary for men was about 8,700 higher than for women. This seemed like a considerable difference, so it was decided that a further analysis of the company salaries should be conducted. 
 
@@ -86,9 +86,9 @@ statistics
 
 ```
 
-From the data obtained, we can observe that the confidence intervals do not overlap. Hence, we can conclude that there is a significant difference between the salaries of male and female executives. 
+From the data obtained, we can observe that the 95% confidence intervals do not overlap. Hence, we can conclude that there is a significant difference between the salaries of male and female executives. 
 
-Additionally, we will run further tests to verify our conclusion: a hypothesis testing, assuming a null hypothesis that the mean difference in salaries for mean and women is zero. 
+Additionally, we will run further tests to verify our conclusion: a hypothesis testing, assuming a null hypothesis that the mean difference in salaries for men and women is zero. 
 
 ```{r, hypothesis_testing_salary_gender}
 # Hypothesis testing using t.test() 

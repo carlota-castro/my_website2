@@ -3,7 +3,7 @@ categories:
 - ""
 - ""
 date: "2020-09-15"
-description: Analysis of several movies
+description: Analysis of factors such as movie gender, director, rating distribution....
 draft: false
 image: movies_image.jpg
 keywords: ""
@@ -30,7 +30,8 @@ knitr::opts_chunk$set(
 
 
 ```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
-library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+#Loading the necessary libraries.
+library(tidyverse)   
 library(mosaic)
 library(ggthemes)
 library(lubridate)
@@ -42,9 +43,12 @@ library(vroom)
 library(tidyquant)
 library(kableExtra)
 ```
+
 # Analysis of movies- IMDB dataset
 
-For the following analysis, we use a subset sample of movies, taken from the [Kaggle IMDB 5000 movie dataset](https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset)
+Our team has been tasked with an analysis of several factors related to movies. We want to explore, among others, factors on which the financial success of a movie could depend. We will start with a general exploration of the dataset: how many movies belong to each gender category, what is the financial performance of each gender category, and who are the directors. Furthermore, we will delve into ratings distribution and analyse the impact of factors such as Facebook likes and budget on the financial performance of the movie.
+
+For the subsequent analysis, we use a subset sample of movies, taken from the [Kaggle IMDB 5000 movie dataset](https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset)
 
   
 ```{r,load_movies, warning=FALSE, message=FALSE, echo=FALSE}
@@ -88,7 +92,8 @@ dupes <- movies %>%
 
 table(dupes)["TRUE"]
 
-# Create the variable movies cleaned that contains the movies without duplicates 
+# Create the variable movies cleaned that 
+#contains the movies without duplicates 
 movies_cleaned <- movies[!dupes,]
 
 ```
@@ -150,7 +155,8 @@ genre_gross_budget %>%
 This table shows that the most profitable movies are by far horror movies. This genre could be considered as an outlier since it is on average 4 times more profitable than the second on the list, which is Biography. Conversely, the least profitable genre is “Thriller” and it is unexpectedly low. However, it would not be relevant to assert that it is not a profitable genre, since there is only 1 thriller movie in our data frame. As a rule of thumb, we could assume that it would be difficult to conclude without a significant sample size of at least n=30 movies. Hence,  we will not comment on which genre is the least profitable one, but it is fair to conclude that horror movies are indeed very profitable.
 
 ### Top directors
-After determining the number of movies per genre, and the financial performance, we want to understand the directors behind the films.
+After determining the number of movies per genre, and the financial performance, we want to understand the directors behind the films. We will calculate the total revenue, mean revenue, median revenue and standard deviation of the revenue, (values in millions of dollars) for each director.
+
 ```{r, question4}
 #Create dataframe top directors
 top_directors <- movies_cleaned %>%
@@ -166,14 +172,14 @@ top_directors <- movies_cleaned %>%
 
 top_directors %>%
   #Create table 
-  kbl(col.names = c("Director", "Total Revenue", "Mean Revenue", "Median Revenue", "SD of Revenue")) %>%
+  kbl(col.names = c("Director", "Total Rev", "Mean Rev", "Median Rev", "SD Rev")) %>%
   kable_material(c("hover")) %>%
   kable_styling(fixed_thead = F)%>%
   column_spec(1, bold = T, border_right = F) %>%
   column_spec(1:5, background = "blue")
 ```
 ### Ratings distribution
-The next question we want to analyse is: how are the ratings of the movies grouped by gender distributed? Are some genres generally more highly rated than others?
+The next question we want to analyse is: how are the ratings of the movies (grouped by gender) distributed? Are some genres generally more highly rated than others?
 
 ```{r, question5}
 #Create data.frame genre_ratings
@@ -199,7 +205,7 @@ ggplot(movies, aes(x = rating, group = genre)) +
 It is interesting to notice that while horror  movies were the most profitable ones, they are also the most disliked movies (after the thriller movie which represents an unsignificant sample). Conversely, Biography movies are the most liked ones and are also very profitable. Perhaps movies are a great source of inspiration, and while there is no dearth of good fictional movies, what really inspires people are biographies.
 
 ## Facebook likes and gross sales of a movie?
-Further to the analyses conducted so far, we want to further understand if the number of Facebook likes on a social media affects gross sales of a movie. Does having more facebook likes lead to a greater number of sales of a movie? Let's see!
+Further to the analyses conducted so far, we want to understand if the number of Facebook likes on a social media affects gross sales of a movie. Does having more facebook likes lead to a greater number of sales of a movie? Let's see!
 
 ```{r, gross_on_fblikes}
 #Create a scatter plot having the number of facebook likes on the x axis and gross on the y-axis.
@@ -246,3 +252,4 @@ movies %>%
   summarize(correlation = cor(budget,gross)^2)
 
 ```
+A relationship between the movie budget and the gross sales of a movie can be inferred. There is a clear correlation between a higher budget and a resulting higher likelihood for commercial success in terms of gross sales.
